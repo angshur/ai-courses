@@ -1,13 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --sage:    #E0E5CF;
-  --sage-dk: #D0D6BC;
-  --onyx:    #141410;
-  --olive:   #8FA855;
-  --card:    #EEF1E4;
-  --muted:   #6B7060;
-  --dim:     #3A3C30;
+  --marble: #F0EBE0;
+  --bone: #E8E2D5;
+  --onyx: #1A1714;
+  --gold: #B8933A;
+  --slate: #4A4540;
+  --silver: #9A9490;
 }
 
 * {
@@ -21,13 +20,13 @@ html {
 }
 
 body {
-  background-color: var(--sage);
-  color: var(--onyx);
+  background-color: var(--marble);
+  color: var(--slate);
   font-family: var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background-color: var(--olive);
-  color: var(--onyx);
+  background-color: var(--gold);
+  color: var(--marble);
 }

@@ -1,23 +1,5 @@
 "use client";
 
-const PILLARS = [
-  {
-    num: "01",
-    label: "Frameworks",
-    desc: "Mental models that transfer across roles, industries, and tools. Not checklists — thinking systems.",
-  },
-  {
-    num: "02",
-    label: "Artifacts",
-    desc: "Every course ships a fillable worksheet. Something you take into your next meeting.",
-  },
-  {
-    num: "03",
-    label: "No hype",
-    desc: "Built for practitioners. The fear, the confusion, and the actual decisions — not the press release version.",
-  },
-];
-
 const COURSES = [
   {
     num: "01",
@@ -61,160 +43,117 @@ const COURSES = [
   },
 ];
 
-function SectionLabel({ label }: { label: string }) {
-  return (
-    <div className="flex items-center gap-4 mb-10">
-      <span className="text-[#6B7060] font-mono text-[10px]">——</span>
-      <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#6B7060]">{label}</span>
-      <div className="flex-1 h-px bg-[#141410]/15" />
-    </div>
-  );
-}
-
 export default function Home() {
   return (
-    <main className="bg-[#E0E5CF] min-h-screen">
+    <main>
 
       {/* Nav */}
-      <nav className="bg-[#141410] px-8 h-11 flex items-center justify-between">
-        <a
-          href="https://angshumanrudra.com"
-          className="font-mono text-[10px] tracking-widest uppercase text-[#6B7060] hover:text-[#E0E5CF] transition-colors"
-        >
-          Angshuman Rudra
-        </a>
-        <a
-          href="https://substack.com/@angshuman"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-mono text-[10px] tracking-widest uppercase text-[#8FA855] hover:text-[#E0E5CF] transition-colors"
-        >
-          Subscribe →
-        </a>
-      </nav>
-
-      {/* Hero */}
-      <section className="px-8 pt-16 pb-14 border-b border-[#141410]/15">
-        <p className="font-mono text-[10px] tracking-widest uppercase text-[#6B7060] mb-6">
-          BY Angshuman Rudra
-        </p>
-        <h1
-          className="text-[clamp(72px,12vw,180px)] leading-[0.9] font-black text-[#141410] tracking-tight mb-6"
-          style={{ fontFamily: "var(--font-inter)", fontWeight: 900 }}
-        >
-          Teaching<br />
-          <span style={{ background: "#8FA855", padding: "0 8px" }}>AI.</span>
-        </h1>
-        <p className="text-[#3A3C30] text-lg max-w-xl leading-relaxed mt-4">
-          <em>Practical frameworks for product managers, career professionals, and builders. Not hype.</em>
-        </p>
-      </section>
-
-      {/* Pillars */}
-      <section className="px-8 py-14 border-b border-[#141410]/15">
-        <SectionLabel label="The Curriculum Has 3 Principles" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {PILLARS.map((p) => (
-            <div key={p.num} className="bg-[#EEF1E4] border border-[#141410]/10 p-6 flex flex-col gap-3">
-              <span className="font-mono text-[10px] text-[#6B7060]">{p.num}</span>
-              <h3 className="font-bold text-[#141410] text-xl tracking-tight">{p.label}</h3>
-              <p className="text-[#3A3C30] text-sm leading-relaxed">{p.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Course table */}
-      <section className="px-8 py-14">
-        <SectionLabel label="The Courses" />
-        <div className="bg-[#141410] overflow-hidden">
-          {/* Table header */}
-          <div className="grid grid-cols-[40px_1fr_auto] gap-6 px-6 py-3 border-b border-white/10">
-            <span className="font-mono text-[9px] tracking-widest uppercase text-[#6B7060]">#</span>
-            <span className="font-mono text-[9px] tracking-widest uppercase text-[#6B7060]">Course</span>
-            <span className="font-mono text-[9px] tracking-widest uppercase text-[#6B7060] hidden md:block">Audience</span>
-          </div>
-          {/* Rows */}
-          {COURSES.map((course, i) => (
-            <a
-              key={course.num}
-              href={course.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`grid grid-cols-[40px_1fr] md:grid-cols-[40px_1fr_200px] gap-6 px-6 py-7 group hover:bg-white/5 transition-colors ${i < COURSES.length - 1 ? "border-b border-white/10" : ""}`}
-            >
-              <span className="font-mono text-[10px] text-[#6B7060] pt-1">{course.num}</span>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="font-mono text-[9px] tracking-widest uppercase text-[#6B7060]">{course.format}</span>
-                  {course.live && (
-                    <span
-                      className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5"
-                      style={{ background: "#8FA855", color: "#141410" }}
-                    >
-                      Live
-                    </span>
-                  )}
-                </div>
-                <h3 className="font-bold text-[#E0E5CF] text-lg leading-snug group-hover:text-white transition-colors">
-                  {course.title}
-                </h3>
-                <p className="text-[#6B7060] text-sm leading-relaxed">{course.tagline}</p>
-                <span className="font-mono text-[9px] tracking-widest uppercase text-[#8FA855] group-hover:text-white transition-colors md:hidden">
-                  {course.cta}
-                </span>
-              </div>
-              <div className="hidden md:flex flex-col justify-between">
-                <p className="font-mono text-[10px] text-[#6B7060] leading-relaxed">{course.audience}</p>
-                <span className="font-mono text-[9px] tracking-widest uppercase text-[#8FA855] group-hover:text-white transition-colors">
-                  {course.cta}
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="px-8 pb-16">
-        <div className="bg-[#EEF1E4] border border-[#141410]/10 p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div>
-            <p className="font-mono text-[10px] tracking-widest uppercase text-[#6B7060] mb-2">Stay ahead</p>
-            <p className="font-bold text-[#141410] text-xl">
-              Get notified when new courses launch.
-              <span
-                className="inline-block ml-2 px-1"
-                style={{ background: "#8FA855" }}
-              >
-                It&apos;s free.
-              </span>
-            </p>
-          </div>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F0EBE0]/95 backdrop-blur-sm border-b border-[#E8E2D5]">
+        <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
+          <a
+            href="https://angshumanrudra.com"
+            className="font-mono text-[9px] tracking-widest uppercase text-[#9A9490] hover:text-[#B8933A] transition-colors"
+          >
+            Angshuman Rudra
+          </a>
           <a
             href="https://substack.com/@angshuman"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#141410] text-[#E0E5CF] font-mono text-[10px] tracking-widest uppercase px-8 py-4 hover:bg-[#8FA855] hover:text-[#141410] transition-colors shrink-0"
+            className="font-mono text-[9px] tracking-widest uppercase text-[#F0EBE0] bg-[#1A1714] px-4 py-2 hover:bg-[#B8933A] transition-colors"
           >
-            Subscribe →
+            Subscribe
           </a>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-32 pb-16 px-6 bg-[#F0EBE0]">
+        <div className="max-w-6xl mx-auto">
+          <p className="font-mono text-[9px] tracking-widest uppercase text-[#B8933A] mb-4">
+            Angshuman Rudra · How I teach
+          </p>
+          <h1
+            className="text-[clamp(64px,11vw,160px)] leading-none text-[#1A1714]"
+            style={{ fontFamily: "var(--font-cormorant)", fontWeight: 300 }}
+          >
+            Teaching.
+          </h1>
+          <p
+            className="mt-6 text-[#4A4540] max-w-2xl leading-relaxed"
+            style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1.25rem" }}
+          >
+            Free courses on AI for product managers, career professionals, and builders.
+            Practical frameworks, not hype. One complete curriculum exists — three more are in progress.
+          </p>
+        </div>
+      </section>
+
+      {/* Course list */}
+      <section className="bg-[#F0EBE0] px-6 pb-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="divide-y divide-[#E8E2D5] border-t border-[#E8E2D5]">
+            {COURSES.map((course) => (
+              <a
+                key={course.num}
+                href={course.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-8 py-10 group hover:bg-[#E8E2D5] transition-colors -mx-6 px-6"
+              >
+                <div className="shrink-0 w-10 pt-1">
+                  <span className="font-mono text-[9px] tracking-widest text-[#9A9490]">{course.num}</span>
+                </div>
+                <div className="flex-1 min-w-0 flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <p className="font-mono text-[9px] tracking-widest uppercase text-[#B8933A]">{course.format}</p>
+                    {course.live && (
+                      <span className="font-mono text-[8px] tracking-widest uppercase text-[#B8933A] border border-[#B8933A]/40 px-1.5 py-0.5">
+                        Live
+                      </span>
+                    )}
+                  </div>
+                  <h2
+                    className="leading-tight text-[#1A1714] group-hover:text-[#B8933A] transition-colors"
+                    style={{ fontFamily: "var(--font-cormorant)", fontWeight: 400, fontSize: "clamp(22px, 2.8vw, 40px)" }}
+                  >
+                    {course.title}
+                  </h2>
+                  <p
+                    className="text-[#4A4540] leading-relaxed max-w-2xl"
+                    style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1.1rem" }}
+                  >
+                    {course.tagline}
+                  </p>
+                  <p className="font-mono text-[9px] tracking-widest uppercase text-[#9A9490]">{course.audience}</p>
+                </div>
+                <div className="hidden md:flex items-center shrink-0 self-center">
+                  <span className="font-mono text-[9px] tracking-widest uppercase text-[#B8933A] group-hover:text-[#1A1714] transition-colors whitespace-nowrap">
+                    {course.cta}
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#141410] px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span className="font-mono text-[9px] tracking-widest uppercase text-[#3A3C30]">Angshuman Rudra · MMXXVI</span>
-        <div className="flex items-center gap-6">
-          {[
-            ["angshumanrudra.com", "https://angshumanrudra.com"],
-            ["LinkedIn", "https://linkedin.com/in/angshuman"],
-            ["Substack", "https://substack.com/@angshuman"],
-          ].map(([label, href]) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              className="font-mono text-[9px] tracking-widest uppercase text-[#3A3C30] hover:text-[#8FA855] transition-colors">
-              {label}
-            </a>
-          ))}
+      <footer className="py-6 px-6 bg-[#0F0D0B] border-t border-[#1A1714]">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span className="font-mono text-[8px] tracking-widest uppercase text-[#4A4540]">Angshuman Rudra · MMXXVI</span>
+          <div className="flex items-center gap-6">
+            {[
+              ["angshumanrudra.com", "https://angshumanrudra.com"],
+              ["LinkedIn", "https://linkedin.com/in/angshuman"],
+              ["Substack", "https://substack.com/@angshuman"],
+            ].map(([label, href]) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                className="font-mono text-[8px] tracking-widest uppercase text-[#4A4540] hover:text-[#B8933A] transition-colors">
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       </footer>
 
