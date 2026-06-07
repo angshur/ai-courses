@@ -68,20 +68,20 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 bg-[#F0EBE0]">
+      <section className="pt-24 pb-10 px-6 bg-[#F0EBE0]">
         <div className="max-w-6xl mx-auto">
           <p className="font-mono text-[9px] tracking-widest uppercase text-[#B8933A] mb-4">
             Angshuman Rudra · How I teach
           </p>
           <h1
-            className="text-[clamp(64px,11vw,160px)] leading-none text-[#1A1714]"
+            className="text-[clamp(36px,4vw,56px)] leading-tight text-[#1A1714]"
             style={{ fontFamily: "var(--font-cormorant)", fontWeight: 300 }}
           >
             Teaching.
           </h1>
           <p
-            className="mt-6 text-[#4A4540] max-w-2xl leading-relaxed"
-            style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1.25rem" }}
+            className="mt-4 text-[#4A4540] max-w-2xl leading-relaxed"
+            style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1rem" }}
           >
             Free courses on AI for product managers, career professionals, and builders.
             Practical frameworks, not hype. One complete curriculum exists — three more are in progress.
@@ -99,7 +99,7 @@ export default function Home() {
                 href={course.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex gap-8 py-10 group hover:bg-[#E8E2D5] transition-colors -mx-6 px-6"
+                className="flex gap-8 py-6 group hover:bg-[#E8E2D5] transition-colors -mx-6 px-6"
               >
                 <div className="shrink-0 w-10 pt-1">
                   <span className="font-mono text-[9px] tracking-widest text-[#9A9490]">{course.num}</span>
@@ -114,14 +114,14 @@ export default function Home() {
                     )}
                   </div>
                   <h2
-                    className="leading-tight text-[#1A1714] group-hover:text-[#B8933A] transition-colors"
-                    style={{ fontFamily: "var(--font-cormorant)", fontWeight: 400, fontSize: "clamp(22px, 2.8vw, 40px)" }}
+                    className="leading-snug text-[#1A1714] group-hover:text-[#B8933A] transition-colors"
+                    style={{ fontFamily: "var(--font-cormorant)", fontWeight: 400, fontSize: "clamp(18px, 1.6vw, 26px)" }}
                   >
                     {course.title}
                   </h2>
                   <p
                     className="text-[#4A4540] leading-relaxed max-w-2xl"
-                    style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1.1rem" }}
+                    style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "0.95rem" }}
                   >
                     {course.tagline}
                   </p>
