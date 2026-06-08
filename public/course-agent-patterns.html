@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Five Patterns Behind Every AI Agent System — Angshuman Rudra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Caveat:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root{--cream:#FAF7F2;--ink:#1C1917;--amber:#D97706;--amber-light:#FEF3C7;--warm-gray:#78716C;--border:#E7E0D5;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;background:var(--ink);}
+#deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+.slide{position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 72px 72px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity 300ms ease,transform 300ms ease;}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:all;}
+
+/* STATEMENT — dark */
+.slide.statement{background:var(--ink);text-align:center;}
+.s-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:18px;}
+.s-title{font-family:'Lora',Georgia,serif;font-size:clamp(30px,4.2vw,54px);font-weight:600;color:#fff;line-height:1.2;letter-spacing:-.02em;max-width:900px;}
+.s-sub{margin-top:22px;font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,19px);color:var(--warm-gray);max-width:700px;line-height:1.6;}
+.s-caveat{margin-top:28px;font-family:'Caveat',cursive;font-size:clamp(20px,2.2vw,30px);color:var(--amber);font-weight:600;}
+.s-key{margin-top:28px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.35vw,17px);color:var(--warm-gray);font-style:italic;max-width:740px;line-height:1.7;}
+
+/* CONTENT — cream */
+.slide.content{background:var(--cream);}
+.slide-header{text-align:center;margin-bottom:28px;}
+.slide-header .s-label{color:var(--warm-gray);}
+.slide-header h2{font-family:'Lora',Georgia,serif;font-size:clamp(22px,2.8vw,40px);font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1.2;}
+.slide-header .subtitle{margin-top:6px;font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,15px);color:var(--warm-gray);line-height:1.5;}
+
+/* Pattern cards grid */
+.pattern-grid{display:grid;gap:14px;width:100%;max-width:960px;}
+.pattern-grid.col-3{grid-template-columns:repeat(3,1fr);}
+.pattern-grid.col-2{grid-template-columns:repeat(2,1fr);}
+.pattern-grid.col-4{grid-template-columns:repeat(4,1fr);}
+.pattern-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.pattern-card .p-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.pattern-card h3{font-family:'Lora',Georgia,serif;font-size:clamp(13px,1.4vw,17px);font-weight:600;color:var(--ink);margin-bottom:10px;line-height:1.3;}
+.pattern-card p{font-family:'DM Sans',sans-serif;font-size:clamp(11px,1.05vw,13px);color:var(--warm-gray);line-height:1.5;}
+
+/* Flow diagrams inside cards */
+.flow{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin-bottom:10px;}
+.flow-step{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--ink);background:var(--amber-light);padding:3px 9px;border-radius:4px;white-space:nowrap;}
+.flow-step.dark{background:var(--ink);color:#fff;}
+.flow-arrow{font-size:10px;color:var(--warm-gray);padding-left:12px;line-height:1;}
+
+/* ReAct special full-width */
+.react-wrap{display:flex;gap:32px;align-items:flex-start;width:100%;max-width:920px;}
+.react-flow-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+.react-step{font-family:'Lora',Georgia,serif;font-size:clamp(13px,1.4vw,17px);font-weight:600;color:#fff;background:var(--ink);padding:8px 20px;border-radius:8px;text-align:center;min-width:100px;}
+.react-arrow{font-size:14px;color:var(--warm-gray);}
+.react-desc{flex:1;}
+.react-desc h3{font-family:'Lora',Georgia,serif;font-size:clamp(15px,1.6vw,20px);font-weight:600;color:var(--ink);margin-bottom:10px;}
+.react-desc p{font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.25vw,15px);color:var(--warm-gray);line-height:1.6;margin-bottom:10px;}
+.react-example{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 18px;}
+.react-example .ex-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.react-example code{font-family:'DM Sans',monospace;font-size:12px;color:var(--ink);display:block;line-height:1.7;}
+
+/* 5 categories overview table */
+.cat-table{width:100%;max-width:860px;border-collapse:collapse;font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,15px);}
+.cat-table th{background:var(--ink);color:#fff;padding:10px 16px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+.cat-table td{padding:10px 16px;border-bottom:1px solid var(--border);line-height:1.4;vertical-align:middle;}
+.cat-table tr:last-child td{border-bottom:none;}
+.cat-table tr:nth-child(even) td{background:rgba(0,0,0,.02);}
+.cat-num{font-family:'Caveat',cursive;font-size:18px;font-weight:700;color:var(--amber);white-space:nowrap;}
+.cat-name{font-weight:600;color:var(--ink);}
+.cat-q{color:var(--warm-gray);font-style:italic;}
+
+/* Mental model chain */
+.model-chain{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;max-width:920px;width:100%;}
+.model-step{text-align:center;flex:1;}
+.model-step .step-word{font-family:'Lora',Georgia,serif;font-size:clamp(13px,1.6vw,20px);font-weight:600;color:#fff;display:block;margin-bottom:4px;}
+.model-step .step-q{font-family:'DM Sans',sans-serif;font-size:clamp(9px,.9vw,12px);color:var(--warm-gray);line-height:1.3;}
+.model-arrow{font-size:20px;color:var(--amber);padding:0 8px;flex-shrink:0;margin-bottom:16px;}
+
+/* Key / caveat */
+.slide-key{margin-top:20px;font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.25vw,15px);color:var(--ink);font-weight:600;text-align:center;font-style:italic;max-width:740px;line-height:1.5;}
+.slide-caveat{margin-top:20px;font-family:'Caveat',cursive;font-size:clamp(16px,1.8vw,24px);color:var(--amber);font-weight:600;text-align:center;}
+
+/* CTA */
+.cta-box{background:var(--amber-light);border:1px solid #F6D860;border-radius:12px;padding:32px 40px;max-width:680px;width:100%;text-align:center;}
+.cta-box p{font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--ink);line-height:1.7;margin-bottom:20px;}
+.cta-btn{display:inline-block;background:var(--amber);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:12px 36px;border-radius:8px;text-decoration:none;}
+
+/* Bullets */
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:12px;max-width:740px;width:100%;}
+.bullet-list li{display:flex;align-items:flex-start;gap:12px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.4vw,17px);color:var(--ink);line-height:1.5;}
+.bullet-list li::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:7px;}
+
+/* Nav */
+.back-link{position:fixed;top:16px;left:20px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--warm-gray);text-decoration:none;z-index:200;letter-spacing:.04em;}
+.back-link:hover{color:var(--amber);}
+#progress-bar-track{position:fixed;bottom:0;left:0;width:100%;height:3px;background:rgba(255,255,255,.08);z-index:200;}
+#progress-bar-fill{height:100%;background:var(--amber);transition:width 300ms ease;}
+#slide-counter{position:fixed;bottom:18px;right:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);z-index:200;letter-spacing:.04em;}
+#nav-hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:'DM Sans',sans-serif;font-size:12px;color:#57534E;z-index:200;pointer-events:none;opacity:1;transition:opacity 600ms ease;}
+#nav-hint.hidden{opacity:0;}
+</style>
+</head>
+<body>
+<a href="/" class="back-link">← All courses</a>
+<div id="deck">
+
+  <!-- 1 COVER -->
+  <div class="slide statement active" data-slide="1">
+    <p class="s-label">Free Mini Course · 20 Minutes</p>
+    <p class="s-title">Five Patterns Behind Every AI Agent System</p>
+    <p class="s-sub">Stop thinking by pattern name. Start thinking by the job each pattern performs.</p>
+    <p class="s-caveat">By Angshuman Rudra</p>
+  </div>
+
+  <!-- 2 THE FRAMING -->
+  <div class="slide statement" data-slide="2">
+    <p class="s-label">The Core Idea</p>
+    <p class="s-title">Every agent system—from coding agents to research agents to enterprise AI—is doing five jobs.</p>
+    <p class="s-sub">LangGraph, OpenAI Agents, CrewAI, AutoGen, Manus. The names change. The jobs don't.</p>
+    <p class="s-key">When you understand the five jobs, you can read any agent architecture and understand it in minutes.</p>
+  </div>
+
+  <!-- 3 THE 5 CATEGORIES -->
+  <div class="slide content" data-slide="3">
+    <div class="slide-header"><h2>The Five Jobs Every Agent System Has to Do</h2></div>
+    <table class="cat-table">
+      <thead><tr><th>#</th><th>Category</th><th>Question it answers</th></tr></thead>
+      <tbody>
+        <tr><td><span class="cat-num">1</span></td><td><span class="cat-name">Decomposition / Planning</span></td><td class="cat-q">What work needs to be done?</td></tr>
+        <tr><td><span class="cat-num">2</span></td><td><span class="cat-name">Execution</span></td><td class="cat-q">How do we do the work?</td></tr>
+        <tr><td><span class="cat-num">3</span></td><td><span class="cat-name">Coordination / Routing</span></td><td class="cat-q">Who should do the work?</td></tr>
+        <tr><td><span class="cat-num">4</span></td><td><span class="cat-name">Evaluation / Quality Control</span></td><td class="cat-q">Is the work good enough?</td></tr>
+        <tr><td><span class="cat-num">5</span></td><td><span class="cat-name">Memory / Context Management</span></td><td class="cat-q">What should we remember?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4 CATEGORY 1 DIVIDER -->
+  <div class="slide statement" data-slide="4">
+    <p class="s-label">Category 1 of 5</p>
+    <p class="s-title">Decomposition & Planning</p>
+    <p class="s-sub">Breaking large goals into pieces that agents can actually execute.</p>
+    <p class="s-key">Question it answers: <em style="color:#fff">What work needs to be done?</em></p>
+  </div>
+
+  <!-- 5 PLANNING PATTERNS -->
+  <div class="slide content" data-slide="5">
+    <div class="slide-header">
+      <p class="s-label">Category 1 — Decomposition / Planning</p>
+      <h2>Three Planning Patterns</h2>
+    </div>
+    <div class="pattern-grid col-3">
+      <div class="pattern-card">
+        <div class="p-label">Pattern 1.1</div>
+        <h3>Planner → Executor</h3>
+        <div class="flow">
+          <span class="flow-step">Goal</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Planner</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Tasks</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Executor(s)</span>
+        </div>
+        <p>One agent plans, separate agents execute. The planner never touches the work directly.</p>
+        <p style="margin-top:8px;font-style:italic;font-size:11px">"Analyze my marketing performance" → planner creates 4 tasks → executors do the work.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 1.2</div>
+        <h3>Hierarchical Planning</h3>
+        <div class="flow">
+          <span class="flow-step dark">CEO Agent</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Manager Agent</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Worker Agents</span>
+        </div>
+        <p>Large objectives become sub-goals, which become tasks. Multiple levels of planning authority.</p>
+        <p style="margin-top:8px;font-style:italic;font-size:11px">Very common in research systems and long-horizon agents.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 1.3</div>
+        <h3>Recursive Decomposition</h3>
+        <div class="flow">
+          <span class="flow-step">Goal</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Subgoal</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Sub-subgoal</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Executable Work</span>
+        </div>
+        <p>Keep breaking until each unit is small enough to execute reliably in one step.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 CATEGORY 2 DIVIDER -->
+  <div class="slide statement" data-slide="6">
+    <p class="s-label">Category 2 of 5</p>
+    <p class="s-title">Execution</p>
+    <p class="s-sub">Actually getting the work done — thinking, acting, observing, repeating.</p>
+    <p class="s-key">Question it answers: <em style="color:#fff">How do we do the work?</em></p>
+  </div>
+
+  <!-- 7 REACT PATTERN (its own slide) -->
+  <div class="slide content" data-slide="7">
+    <div class="slide-header">
+      <p class="s-label">Category 2 — Execution · Pattern 2.1</p>
+      <h2>The ReAct Pattern</h2>
+      <p class="subtitle">Probably the most influential pattern in modern AI agents</p>
+    </div>
+    <div class="react-wrap">
+      <div class="react-flow-col">
+        <div class="react-step">Think</div>
+        <span class="react-arrow">↓</span>
+        <div class="react-step">Act</div>
+        <span class="react-arrow">↓</span>
+        <div class="react-step">Observe</div>
+        <span class="react-arrow">↓</span>
+        <div class="react-step">Think</div>
+        <span class="react-arrow">↓</span>
+        <div class="react-step">Act</div>
+      </div>
+      <div class="react-desc">
+        <p>The agent reasons about what to do, takes an action, observes the result, then reasons again. It loops until the task is done.</p>
+        <p>Most modern agents — Claude Code, coding agents, research agents — are ReAct variants.</p>
+        <div class="react-example">
+          <div class="ex-label">Example</div>
+          <code>Think: I need the weather in Tokyo.</code>
+          <code>Act: call weather API</code>
+          <code>Observe: {"temp": 22, "condition": "cloudy"}</code>
+          <code>Think: I have the data I need.</code>
+          <code>Act: answer user</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 TOOL-USING + WORKFLOW -->
+  <div class="slide content" data-slide="8">
+    <div class="slide-header">
+      <p class="s-label">Category 2 — Execution</p>
+      <h2>Two More Execution Patterns</h2>
+    </div>
+    <div class="pattern-grid col-2">
+      <div class="pattern-card">
+        <div class="p-label">Pattern 2.2</div>
+        <h3>Tool-Using Agent</h3>
+        <div class="flow">
+          <span class="flow-step dark">Reason</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Choose Tool</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Execute</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Continue</span>
+        </div>
+        <p>The agent selects from a menu of tools and invokes them as needed. A specialization of ReAct where the actions are pre-defined tool calls.</p>
+        <p style="margin-top:10px;font-size:11px;color:var(--warm-gray)"><strong>Common tools:</strong> web search, SQL, Slack, Salesforce, Python executor, file system, APIs</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 2.3</div>
+        <h3>Workflow / Chain</h3>
+        <div class="flow">
+          <span class="flow-step">Step A</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Step B</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Step C</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Output</span>
+        </div>
+        <p>Deterministic, pre-defined pipelines. Each step's output is the next step's input. No dynamic reasoning about what to do next.</p>
+        <p style="margin-top:10px;font-size:11px;color:var(--warm-gray)">Common in enterprise AI where auditability and predictability matter more than flexibility.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 CATEGORY 3 DIVIDER -->
+  <div class="slide statement" data-slide="9">
+    <p class="s-label">Category 3 of 5</p>
+    <p class="s-title">Coordination & Routing</p>
+    <p class="s-sub">Deciding which agent handles which request — and how multiple agents collaborate.</p>
+    <p class="s-key">Question it answers: <em style="color:#fff">Who should do the work?</em></p>
+  </div>
+
+  <!-- 10 COORDINATION PATTERNS -->
+  <div class="slide content" data-slide="10">
+    <div class="slide-header">
+      <p class="s-label">Category 3 — Coordination / Routing</p>
+      <h2>Three Coordination Patterns</h2>
+    </div>
+    <div class="pattern-grid col-3">
+      <div class="pattern-card">
+        <div class="p-label">Pattern 3.1</div>
+        <h3>Router Pattern</h3>
+        <div class="flow">
+          <span class="flow-step">Request</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Router</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Agent A / B / C</span>
+        </div>
+        <p>An agent or classifier reads the request and sends it to the right specialist.</p>
+        <p style="margin-top:8px;font-style:italic;font-size:11px">Analytics Agent · SEO Agent · Finance Agent. The router decides who gets the ball.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 3.2</div>
+        <h3>Specialist Pattern</h3>
+        <div class="flow">
+          <span class="flow-step dark">General Agent</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Specialist Agent</span>
+        </div>
+        <p>A generalist agent hands off to a specialist with deeper expertise in a narrow domain.</p>
+        <p style="margin-top:8px;font-style:italic;font-size:11px">SQL Expert · Data Scientist · Copywriter. The generalist knows when to defer.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 3.3</div>
+        <h3>Swarm Pattern</h3>
+        <div class="flow">
+          <span class="flow-step">Task</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Agent 1</span>
+          <span class="flow-step dark">Agent 2</span>
+          <span class="flow-step dark">Agent 3</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Combined Result</span>
+        </div>
+        <p>Many agents work in parallel on the same task. Results are aggregated.</p>
+        <p style="margin-top:8px;font-style:italic;font-size:11px">Useful for broad research, parallel code generation, covering many sources simultaneously.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 CATEGORY 4 DIVIDER -->
+  <div class="slide statement" data-slide="11">
+    <p class="s-label">Category 4 of 5</p>
+    <p class="s-title">Evaluation & Quality Control</p>
+    <p class="s-sub">Deciding if the work is actually good — before it ships.</p>
+    <p class="s-key">Question it answers: <em style="color:#fff">Is the work good enough?</em></p>
+  </div>
+
+  <!-- 12 GENERATOR-REVIEWER + REFLECTION -->
+  <div class="slide content" data-slide="12">
+    <div class="slide-header">
+      <p class="s-label">Category 4 — Evaluation / Quality Control</p>
+      <h2>Two Core Evaluation Patterns</h2>
+    </div>
+    <div class="pattern-grid col-2">
+      <div class="pattern-card">
+        <div class="p-label">Pattern 4.1</div>
+        <h3>Generator → Reviewer</h3>
+        <div class="flow">
+          <span class="flow-step dark">Generate</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Review</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Improve</span>
+        </div>
+        <p>A separate reviewer agent critiques the generator's output. The generator revises based on feedback.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">The most widely used quality pattern. Separation of concerns: one agent creates, another judges. Neither role bleeds into the other.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 4.2</div>
+        <h3>Reflection</h3>
+        <div class="flow">
+          <span class="flow-step dark">Generate</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Reflect</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Revise</span>
+        </div>
+        <p>The same agent reviews its own output before delivering it. No separate reviewer.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">Simpler to implement. Less effective than a separate reviewer — self-critique has limits. Best when an external reviewer isn't practical.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13 DEBATE + JUDGE + CONSENSUS -->
+  <div class="slide content" data-slide="13">
+    <div class="slide-header">
+      <p class="s-label">Category 4 — Evaluation / Quality Control</p>
+      <h2>Three Advanced Evaluation Patterns</h2>
+    </div>
+    <div class="pattern-grid col-3">
+      <div class="pattern-card">
+        <div class="p-label">Pattern 4.3</div>
+        <h3>Debate</h3>
+        <div class="flow">
+          <span class="flow-step dark">Agent A</span>
+          <span class="flow-step dark">Agent B</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Judge</span>
+        </div>
+        <p>Two agents argue opposing positions. A judge evaluates and picks the stronger argument.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">Useful for decisions with real tradeoffs — forces surfacing of both sides.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 4.4</div>
+        <h3>Judge Pattern</h3>
+        <div class="flow">
+          <span class="flow-step">Candidate A</span>
+          <span class="flow-step">Candidate B</span>
+          <span class="flow-step">Candidate C</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Judge</span>
+        </div>
+        <p>Multiple agents produce independent outputs. A judge selects the best result.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">Good when you want parallel diversity — let multiple agents attempt the task, pick the winner.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 4.5</div>
+        <h3>Consensus</h3>
+        <div class="flow">
+          <span class="flow-step">Multiple Agents</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Voting</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Answer</span>
+        </div>
+        <p>Multiple agents vote on an answer. Majority or weighted agreement determines the result.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">Useful when correctness matters and you can afford to run the same task multiple times.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14 CATEGORY 5 DIVIDER -->
+  <div class="slide statement" data-slide="14">
+    <p class="s-label">Category 5 of 5</p>
+    <p class="s-title">Memory & Context Management</p>
+    <p class="s-sub">Deciding what to remember, what to retrieve, and what to forget.</p>
+    <p class="s-key">Question it answers: <em style="color:#fff">What should we remember?</em></p>
+  </div>
+
+  <!-- 15 SHORT TERM + LONG TERM + RAG -->
+  <div class="slide content" data-slide="15">
+    <div class="slide-header">
+      <p class="s-label">Category 5 — Memory / Context Management</p>
+      <h2>Three Memory Patterns</h2>
+    </div>
+    <div class="pattern-grid col-3">
+      <div class="pattern-card">
+        <div class="p-label">Pattern 5.1</div>
+        <h3>Short-Term Working Memory</h3>
+        <div class="flow">
+          <span class="flow-step">Current Task</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Scratchpad</span>
+        </div>
+        <p>Temporary memory during execution — notes, intermediate results, reasoning steps.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">Lives in the context window. Gone when the session ends. The agent thinks on paper.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 5.2</div>
+        <h3>Long-Term Memory</h3>
+        <div class="flow">
+          <span class="flow-step">Past Sessions</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Memory Store</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Future Tasks</span>
+        </div>
+        <p>Persistent storage of user preferences, past decisions, and accumulated knowledge.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">What makes an agent feel like it "knows you." Survives session resets.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="p-label">Pattern 5.3</div>
+        <h3>RAG</h3>
+        <div class="flow">
+          <span class="flow-step">Question</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Retrieve Context</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Answer</span>
+        </div>
+        <p>Retrieval-Augmented Generation. The agent fetches relevant documents before answering.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--warm-gray)">Still the most commonly deployed memory pattern in production systems.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16 CONTEXT ENGINEERING -->
+  <div class="slide content" data-slide="16">
+    <div class="slide-header">
+      <p class="s-label">Category 5 — Memory · The Emerging Pattern</p>
+      <h2>Context Engineering</h2>
+    </div>
+    <div class="pattern-grid col-2" style="max-width:860px">
+      <div class="pattern-card" style="border-color:var(--amber)">
+        <div class="p-label">Pattern 5.4</div>
+        <h3>Context Engineering</h3>
+        <div class="flow">
+          <span class="flow-step">Many Sources</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step dark">Context Builder</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-step">Agent</span>
+        </div>
+        <p>Instead of focusing on prompts, focus on context: what information is needed, which is relevant, how it should be compressed, what should be forgotten.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;justify-content:center">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 18px">
+          <p style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:8px">The four questions</p>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px">
+            <li style="font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--ink)">→ What information is needed?</li>
+            <li style="font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--ink)">→ Which information is relevant?</li>
+            <li style="font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--ink)">→ How should it be compressed?</li>
+            <li style="font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--ink)">→ What should be forgotten?</li>
+          </ul>
+        </div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--warm-gray);line-height:1.6;font-style:italic">Many practitioners now see context engineering as more important than prompt engineering. The model is a given. What you put in front of it is the craft.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 17 THE MENTAL MODEL -->
+  <div class="slide statement" data-slide="17">
+    <p class="s-label">The Synthesis</p>
+    <p class="s-title">Every serious agent system is a combination of these five layers.</p>
+    <div style="margin-top:40px;width:100%;max-width:860px">
+      <div class="model-chain">
+        <div class="model-step">
+          <span class="step-word">Plan</span>
+          <span class="step-q">What needs<br/>to be done?</span>
+        </div>
+        <span class="model-arrow">→</span>
+        <div class="model-step">
+          <span class="step-word">Route</span>
+          <span class="step-q">Who should<br/>do it?</span>
+        </div>
+        <span class="model-arrow">→</span>
+        <div class="model-step">
+          <span class="step-word">Execute</span>
+          <span class="step-q">How do we<br/>do it?</span>
+        </div>
+        <span class="model-arrow">→</span>
+        <div class="model-step">
+          <span class="step-word">Review</span>
+          <span class="step-q">Is it good<br/>enough?</span>
+        </div>
+        <span class="model-arrow">→</span>
+        <div class="model-step">
+          <span class="step-word">Remember</span>
+          <span class="step-q">What do we<br/>keep?</span>
+        </div>
+      </div>
+    </div>
+    <p class="s-key" style="margin-top:36px">Read any agent framework through this lens and you'll see exactly where it's strong, where it cuts corners, and what it's optimized for.</p>
+  </div>
+
+  <!-- 18 WHERE DIFFERENTIATION IS EMERGING -->
+  <div class="slide content" data-slide="18">
+    <div class="slide-header">
+      <h2>Where the Industry Is Shifting</h2>
+      <p class="subtitle">The conversation is no longer "which model?" — it's "how good is your planning, evaluation, and context?"</p>
+    </div>
+    <table class="cat-table" style="max-width:820px">
+      <thead><tr><th>Layer</th><th>Old question</th><th>New question</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Planning</strong></td><td>Can it follow instructions?</td><td>How well does it decompose complex goals?</td></tr>
+        <tr><td><strong>Execution</strong></td><td>Which model are you using?</td><td>How reliably does ReAct loop terminate correctly?</td></tr>
+        <tr><td><strong>Routing</strong></td><td>Does it use tools?</td><td>How accurately does it route between specialists?</td></tr>
+        <tr><td><strong>Evaluation</strong></td><td>Does it produce output?</td><td>How good is the review loop at catching failures?</td></tr>
+        <tr><td><strong>Memory</strong></td><td>Do you use RAG?</td><td>What gets into context, and what gets filtered out?</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-caveat">The model is now a given. Everything around it is where you compete.</p>
+  </div>
+
+  <!-- 19 CTA -->
+  <div class="slide content" data-slide="19">
+    <div class="slide-header"><h2>Go Deeper</h2></div>
+    <div class="cta-box">
+      <p>Subscribe for more courses on building and directing AI agent systems — practical frameworks for PMs, engineers, and builders who work with AI every day.</p>
+      <a class="cta-btn" href="https://substack.com/@angshuman" target="_blank">Subscribe — it's free →</a>
+    </div>
+    <p style="margin-top:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);text-align:center">Questions? <a href="mailto:angshuman.rudra@gmail.com" style="color:var(--amber)">angshuman.rudra@gmail.com</a></p>
+  </div>
+
+</div>
+
+<div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+<div id="slide-counter">1 / 19</div>
+<div id="nav-hint">← → Space to navigate</div>
+
+<script>
+const TOTAL=19;let current=1;
+const counter=document.getElementById('slide-counter');
+const fill=document.getElementById('progress-bar-fill');
+const navHint=document.getElementById('nav-hint');
+function getSlide(n){return document.querySelector(`.slide[data-slide="${n}"]`);}
+function updateUI(){counter.textContent=`${current} / ${TOTAL}`;fill.style.width=`${(current/TOTAL)*100}%`;}
+function goTo(n){if(n<1||n>TOTAL)return;const prev=getSlide(current),next=getSlide(n);if(prev)prev.classList.remove('active');current=n;if(next)next.classList.add('active');updateUI();}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();goTo(current+1);}else if(e.key==='ArrowLeft'){e.preventDefault();goTo(current-1);}});
+let hintTimer=setTimeout(()=>navHint.classList.add('hidden'),4000);
+document.addEventListener('keydown',()=>{navHint.classList.remove('hidden');clearTimeout(hintTimer);hintTimer=setTimeout(()=>navHint.classList.add('hidden'),2500);});
+updateUI();
+</script>
+</body>
+</html>

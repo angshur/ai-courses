@@ -51,6 +51,16 @@ const COURSES = [
     url: "/course-agent-teams.html",
     cta: "View slides →",
   },
+  {
+    num: "06",
+    format: "FREE · 20 MIN",
+    title: "Five Patterns Behind Every AI Agent System",
+    tagline: "Stop thinking by pattern name. Start thinking by the job each pattern performs. Plan → Route → Execute → Review → Remember.",
+    audience: "PMs, engineers, and technical founders building with agents",
+    live: true,
+    url: "/course-agent-patterns.html",
+    cta: "View slides →",
+  },
 ];
 
 export default function Home() {
@@ -87,7 +97,7 @@ export default function Home() {
           Free courses for product managers, career professionals, and builders. Practical frameworks, not hype.
         </p>
         <p style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(20px, 2.2vw, 28px)", color: "var(--amber)", fontWeight: 600 }}>
-          Five courses. All free. All live.
+          Six courses. All free. All live.
         </p>
       </section>
 
