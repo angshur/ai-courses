@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Build Agent Teams for Real Business Workflows — Angshuman Rudra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Caveat:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root { --cream:#FAF7F2; --ink:#1C1917; --amber:#D97706; --amber-light:#FEF3C7; --warm-gray:#78716C; --border:#E7E0D5; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;background:var(--ink);}
+#deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+.slide{position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 80px 80px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity 300ms ease,transform 300ms ease;}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:all;}
+.slide.statement{background:var(--ink);text-align:center;}
+.slide.statement .s-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:20px;}
+.slide.statement .s-title{font-family:'Lora',Georgia,serif;font-size:clamp(32px,4.5vw,58px);font-weight:600;color:#fff;line-height:1.2;letter-spacing:-.02em;max-width:860px;}
+.slide.statement .s-sub{margin-top:24px;font-family:'DM Sans',sans-serif;font-size:clamp(15px,1.6vw,20px);color:var(--warm-gray);max-width:680px;line-height:1.6;}
+.slide.statement .s-caveat{margin-top:32px;font-family:'Caveat',cursive;font-size:clamp(20px,2.2vw,30px);color:var(--amber);font-weight:600;}
+.slide.content{background:var(--cream);}
+.slide-header{text-align:center;margin-bottom:32px;}
+.slide-header .s-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:10px;}
+.slide-header h2{font-family:'Lora',Georgia,serif;font-size:clamp(22px,2.8vw,40px);font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1.2;}
+.slide-header .subtitle{margin-top:8px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--warm-gray);}
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:14px;max-width:760px;width:100%;}
+.bullet-list li{display:flex;align-items:flex-start;gap:14px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.4vw,17px);color:var(--ink);line-height:1.5;}
+.bullet-list li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:6px;}
+.slide-caveat{margin-top:28px;font-family:'Caveat',cursive;font-size:clamp(18px,2vw,26px);color:var(--amber);font-weight:600;text-align:center;}
+.slide-key{margin-top:24px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--ink);font-weight:600;text-align:center;font-style:italic;max-width:720px;}
+.content-table{width:100%;max-width:960px;border-collapse:collapse;font-family:'DM Sans',sans-serif;font-size:clamp(11px,1.1vw,14px);}
+.content-table th{background:var(--ink);color:#fff;padding:9px 14px;text-align:left;font-weight:600;font-size:10px;letter-spacing:.08em;text-transform:uppercase;}
+.content-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--ink);line-height:1.4;vertical-align:top;}
+.content-table tr:last-child td{border-bottom:none;}
+.content-table tr:nth-child(even) td{background:rgba(0,0,0,.02);}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:960px;width:100%;}
+.col-box{padding:20px;border-radius:10px;border:1px solid var(--border);background:#fff;}
+.col-box .col-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.col-box h3{font-family:'Lora',Georgia,serif;font-size:clamp(13px,1.4vw,17px);font-weight:600;color:var(--ink);margin-bottom:6px;line-height:1.3;}
+.col-box p{font-family:'DM Sans',sans-serif;font-size:clamp(11px,1.1vw,13px);color:var(--warm-gray);line-height:1.5;}
+.col-box em{display:block;margin-top:8px;font-style:italic;font-size:clamp(10px,1vw,12px);color:var(--warm-gray);}
+.quote-block{background:var(--amber-light);border-left:3px solid var(--amber);border-radius:6px;padding:16px 20px;max-width:760px;width:100%;margin-bottom:20px;}
+.quote-block p{font-family:'Lora',Georgia,serif;font-size:clamp(14px,1.5vw,18px);color:var(--ink);font-style:italic;line-height:1.5;}
+.artifact-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px 28px;max-width:900px;width:100%;box-shadow:0 1px 3px rgba(28,25,23,.08);}
+.artifact-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
+.artifact-box p{font-family:'DM Sans',sans-serif;font-size:clamp(11px,1.1vw,13px);color:var(--warm-gray);margin-bottom:12px;line-height:1.5;}
+.cta-box{background:var(--amber-light);border:1px solid #F6D860;border-radius:12px;padding:32px 40px;max-width:700px;width:100%;text-align:center;}
+.cta-box p{font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--ink);line-height:1.6;margin-bottom:20px;}
+.cta-btn{display:inline-block;background:var(--amber);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:12px 36px;border-radius:8px;text-decoration:none;}
+.back-link{position:fixed;top:16px;left:20px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--warm-gray);text-decoration:none;z-index:200;letter-spacing:.04em;}
+.back-link:hover{color:var(--amber);}
+#progress-bar-track{position:fixed;bottom:0;left:0;width:100%;height:3px;background:rgba(255,255,255,.08);z-index:200;}
+#progress-bar-fill{height:100%;background:var(--amber);transition:width 300ms ease;}
+#slide-counter{position:fixed;bottom:18px;right:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);z-index:200;letter-spacing:.04em;}
+#nav-hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:'DM Sans',sans-serif;font-size:12px;color:#57534E;z-index:200;pointer-events:none;opacity:1;transition:opacity 600ms ease;}
+#nav-hint.hidden{opacity:0;}
+</style>
+</head>
+<body>
+<a href="/" class="back-link">← All courses</a>
+<div id="deck">
+
+  <!-- 1 COVER -->
+  <div class="slide statement active" data-slide="1">
+    <p class="s-label">Free Lightning Lesson · 90 Minutes</p>
+    <p class="s-title">Build Agent Teams for Real Business Workflows</p>
+    <p class="s-sub">Stop using AI tools one at a time. Here's how to build systems that do the work while you sleep.</p>
+    <p class="s-caveat">By Angshuman Rudra</p>
+  </div>
+
+  <!-- 2 OVERVIEW -->
+  <div class="slide content" data-slide="2">
+    <div class="slide-header"><h2>What We'll Cover</h2></div>
+    <table class="content-table" style="max-width:700px">
+      <thead><tr><th>Section</th><th>Time</th><th>Topic</th></tr></thead>
+      <tbody>
+        <tr><td>Intro</td><td>10 min</td><td>The Problem With AI Point Tools</td></tr>
+        <tr><td>Module 1</td><td>20 min</td><td>The Anatomy of an Agent Team</td></tr>
+        <tr><td>Module 2</td><td>20 min</td><td>Real Business Workflows</td></tr>
+        <tr><td>Module 3</td><td>20 min</td><td>Design Your Agent Team</td></tr>
+        <tr><td>Module 4</td><td>10 min</td><td>Build, Test, Evaluate</td></tr>
+        <tr><td>Close</td><td>10 min</td><td>What to Build This Week</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3 INTRO DIVIDER -->
+  <div class="slide statement" data-slide="3">
+    <p class="s-label">Intro · 10 Minutes</p>
+    <p class="s-title">The Problem With AI Point Tools</p>
+  </div>
+
+  <!-- 4 THE HOOK -->
+  <div class="slide content" data-slide="4">
+    <div class="slide-header"><p class="s-label">Intro — The Current State</p><h2>This Is How Most People Use AI</h2></div>
+    <div class="quote-block"><p>"Copy from ChatGPT. Paste into Notion. Copy from Notion. Paste into email. Repeat 40 times a day."</p></div>
+    <ul class="bullet-list">
+      <li>AI tools have created a new kind of busywork: context switching between AI assistants</li>
+      <li>The average knowledge worker now uses 4–6 AI tools — none of which talk to each other</li>
+      <li>You're doing the orchestration manually. That's the job you're trying to eliminate.</li>
+      <li>The next unlock isn't a better AI tool. It's connecting the tools you already have.</li>
+    </ul>
+    <p class="slide-key">The bottleneck isn't the model. It's you in the middle.</p>
+  </div>
+
+  <!-- 5 TOOLS VS AGENTS -->
+  <div class="slide content" data-slide="5">
+    <div class="slide-header"><p class="s-label">Intro — The Shift</p><h2>Tools vs. Agents: What's Different</h2></div>
+    <table class="content-table" style="max-width:800px">
+      <thead><tr><th>AI Tools</th><th>AI Agents</th></tr></thead>
+      <tbody>
+        <tr><td>You trigger them manually</td><td>They trigger on events or schedules</td></tr>
+        <tr><td>One task per prompt</td><td>Multi-step task sequences</td></tr>
+        <tr><td>You move the output forward</td><td>They pass work to the next step</td></tr>
+        <tr><td>You're the orchestrator</td><td>The system orchestrates itself</td></tr>
+        <tr><td>10x individual productivity</td><td>10x workflow throughput</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">An agent team doesn't replace you. It handles the sequence so you can handle the judgment.</p>
+  </div>
+
+  <!-- 6 WHAT THIS IS NOT -->
+  <div class="slide content" data-slide="6">
+    <div class="slide-header"><p class="s-label">Intro — Scope</p><h2>What We're Not Building Today</h2></div>
+    <ul class="bullet-list">
+      <li>Not autonomous AI that runs your company unsupervised</li>
+      <li>Not a coding project — you don't need to write code</li>
+      <li>Not a replacement for human judgment on consequential decisions</li>
+      <li>Not something that requires an AI engineering team</li>
+    </ul>
+    <div class="quote-block" style="margin-top:24px"><p>What we are building: a structured workflow where AI agents handle the repeatable steps — and humans stay in the loop at the moments that matter.</p></div>
+    <p class="slide-key">The goal is a system you trust, not a black box you pray over.</p>
+  </div>
+
+  <!-- 7 MODULE 1 DIVIDER -->
+  <div class="slide statement" data-slide="7">
+    <p class="s-label">Module 1 · 20 Minutes</p>
+    <p class="s-title">The Anatomy of an Agent Team</p>
+  </div>
+
+  <!-- 8 WHAT IS AN AGENT -->
+  <div class="slide content" data-slide="8">
+    <div class="slide-header"><p class="s-label">Module 1 — Foundations</p><h2>What Is an AI Agent?</h2></div>
+    <div class="quote-block"><p>"An agent is an AI that takes actions — not just answers."</p></div>
+    <ul class="bullet-list">
+      <li>A chatbot answers a question and waits for your next message</li>
+      <li>An agent receives a goal, breaks it into steps, executes them, and returns a result</li>
+      <li>The key difference: <strong>an agent can use tools</strong> — search the web, read a file, call an API, write to a database, trigger another agent</li>
+      <li>"Agent team" = multiple agents, each with a specific role, passing work between them</li>
+    </ul>
+    <p class="slide-key">Think of it like hiring a specialized team — researcher, writer, reviewer, publisher — except the handoffs happen in seconds, not days.</p>
+  </div>
+
+  <!-- 9 THREE ROLES -->
+  <div class="slide content" data-slide="9">
+    <div class="slide-header"><p class="s-label">Module 1 — The Framework</p><h2>Three Roles Every Agent Team Needs</h2></div>
+    <div class="three-col">
+      <div class="col-box">
+        <div class="col-label">Role 1</div>
+        <h3>The Orchestrator</h3>
+        <p>Receives the goal. Breaks it into tasks. Assigns tasks to the right agents. Assembles the final output.</p>
+        <em>The "manager." Often Claude or GPT-4 with a system prompt that defines the workflow.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Role 2</div>
+        <h3>The Specialists</h3>
+        <p>Each specialist handles one class of task: research, writing, summarizing, validating, formatting, sending.</p>
+        <em>Can be different models, tools, or API calls — anything that does one thing well.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Role 3</div>
+        <h3>The Reviewer</h3>
+        <p>Checks the output before it goes to a human or triggers the next step. The quality gate.</p>
+        <em>Catches errors before they compound.</em>
+      </div>
+    </div>
+    <p class="slide-key">Every agent team that works has these three roles — even if you don't call them by these names.</p>
+  </div>
+
+  <!-- 10 HOW AGENTS COMMUNICATE -->
+  <div class="slide content" data-slide="10">
+    <div class="slide-header"><p class="s-label">Module 1 — How It Works</p><h2>How Agents Pass Work to Each Other</h2></div>
+    <div class="three-col">
+      <div class="col-box">
+        <div class="col-label">Sequential · most common</div>
+        <h3>A → B → C → Output</h3>
+        <p>Each agent's output is the next agent's input.</p>
+        <em>Best for: writing pipelines, research summaries, report generation.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Parallel · faster</div>
+        <h3>Orchestrator → [A + B + C] → Assemble</h3>
+        <p>Multiple agents work simultaneously. Orchestrator assembles results.</p>
+        <em>Best for: analyzing multiple documents, checking multiple sources, generating options.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Conditional · smarter</div>
+        <h3>Orchestrator routes by what it finds</h3>
+        <p>If X → Agent A. If Y → Agent B. If uncertain → escalate to human.</p>
+        <em>Best for: triage, classification, customer support routing.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 ARTIFACT: WORKFLOW AUDIT -->
+  <div class="slide content" data-slide="11">
+    <div class="slide-header"><p class="s-label">Module 1 — Artifact</p><h2>Artifact: Your Workflow Audit</h2></div>
+    <div class="artifact-box">
+      <div class="artifact-label">Before designing an agent team, map the workflow you want to automate.</div>
+      <table class="content-table">
+        <thead><tr><th>Step</th><th>Who does it today</th><th>Time it takes</th><th>Repeatable? (Y/N)</th><th>Good agent candidate?</th></tr></thead>
+        <tbody>
+          <tr><td>1.</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>2.</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>3.</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>4.</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>5.</td><td></td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px"><strong>Rule of thumb:</strong> Repeatable + clear input/output + recoverable if wrong = agent candidate. Requires judgment, trust, or accountability = keep a human.</p>
+    </div>
+  </div>
+
+  <!-- 12 MODULE 2 DIVIDER -->
+  <div class="slide statement" data-slide="12">
+    <p class="s-label">Module 2 · 20 Minutes</p>
+    <p class="s-title">Real Business Workflows</p>
+    <p class="s-sub">What agent teams actually look like in the wild</p>
+  </div>
+
+  <!-- 13 EXAMPLE 1: SALES RESEARCH -->
+  <div class="slide content" data-slide="13">
+    <div class="slide-header"><p class="s-label">Module 2 — Example 1</p><h2>Sales Research: Before and After</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Before: 45 min per account (manual)</th></tr></thead>
+      <tbody>
+        <tr><td>Rep Googles the company → reads 3–4 pages → checks LinkedIn → reads recent news → drafts email</td></tr>
+      </tbody>
+    </table>
+    <div style="height:12px"></div>
+    <table class="content-table">
+      <thead><tr><th>After: 3 min per account (agent team)</th><th>Task</th><th>Output</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Research Agent</strong></td><td>Pulls company website, LinkedIn, news</td><td>Raw research package</td></tr>
+        <tr><td><strong>Summarizer Agent</strong></td><td>Extracts 5 key signals (funding, headcount, pain, news, tech)</td><td>1-page brief</td></tr>
+        <tr><td><strong>Writer Agent</strong></td><td>Drafts personalized cold email using brief + context</td><td>Draft email</td></tr>
+        <tr><td><strong>Reviewer Agent</strong></td><td>Checks accuracy, tone, CTA clarity</td><td>Approved or flagged</td></tr>
+        <tr><td><strong>Human step</strong></td><td>Review approved draft, edit one line, send</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">The rep's job didn't disappear. The 40 minutes of busywork did.</p>
+  </div>
+
+  <!-- 14 EXAMPLE 2: CONTENT PRODUCTION -->
+  <div class="slide content" data-slide="14">
+    <div class="slide-header"><p class="s-label">Module 2 — Example 2</p><h2>Content Production: A 5-Agent Pipeline</h2><p class="subtitle">Goal: Turn one blog post into 10 pieces of social content + a newsletter section</p></div>
+    <table class="content-table">
+      <thead><tr><th>Agent</th><th>Input</th><th>Output</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Extractor</strong></td><td>Blog post URL</td><td>10 key insights, pulled verbatim</td></tr>
+        <tr><td><strong>Reformatter (LinkedIn)</strong></td><td>10 insights</td><td>5 LinkedIn posts (short-form)</td></tr>
+        <tr><td><strong>Reformatter (Twitter/X)</strong></td><td>10 insights</td><td>5 tweet threads</td></tr>
+        <tr><td><strong>Newsletter Agent</strong></td><td>Blog post + insights</td><td>300-word newsletter section</td></tr>
+        <tr><td><strong>Scheduler Agent</strong></td><td>All outputs</td><td>Published on schedule or queued for review</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">Review the queue once. Approve or edit. 15 minutes instead of 3 hours.</p>
+  </div>
+
+  <!-- 15 EXAMPLE 3: SUPPORT TRIAGE -->
+  <div class="slide content" data-slide="15">
+    <div class="slide-header"><p class="s-label">Module 2 — Example 3</p><h2>Customer Support: Routing and Resolution</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Agent</th><th>Task</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Classifier Agent</strong></td><td>Reads ticket, assigns: bug / billing / feature / complaint / other</td></tr>
+        <tr><td><strong>Urgency Agent</strong></td><td>Scores urgency 1–5 based on language signals and account tier</td></tr>
+        <tr><td><strong>Router Agent</strong></td><td>Sends to right queue: engineering, billing, PM, support</td></tr>
+        <tr><td><strong>Responder Agent</strong></td><td>Drafts initial acknowledgment with expected resolution time</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">The agents handle the routing. Humans handle the resolution. Both work better.</p>
+  </div>
+
+  <!-- 16 HUMAN CHECKPOINT PATTERN -->
+  <div class="slide content" data-slide="16">
+    <div class="slide-header"><p class="s-label">Module 2 — The Rule</p><h2>Where Humans Stay In the Loop</h2></div>
+    <table class="content-table" style="max-width:800px">
+      <thead><tr><th>High cost of being wrong → Always add a human checkpoint</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Sending an external communication</td><td>Review before send</td></tr>
+        <tr><td>Making a financial decision</td><td>Review before action</td></tr>
+        <tr><td>Publishing content</td><td>Review before publish</td></tr>
+        <tr><td>Escalating to a customer</td><td>Review before escalation</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:16px;font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--warm-gray);max-width:760px;line-height:1.5"><strong>Low cost of being wrong:</strong> Internal research, summarization, first drafts, classification, routing → agents can run autonomously.</p>
+    <p class="slide-key">The best agent teams are not fully autonomous. They're fast everywhere and careful at the seams.</p>
+  </div>
+
+  <!-- 17 MODULE 3 DIVIDER -->
+  <div class="slide statement" data-slide="17">
+    <p class="s-label">Module 3 · 20 Minutes</p>
+    <p class="s-title">Design Your Agent Team</p>
+  </div>
+
+  <!-- 18 DESIGN SEQUENCE -->
+  <div class="slide content" data-slide="18">
+    <div class="slide-header"><p class="s-label">Module 3 — How to Start</p><h2>Four Steps to Design Your First Agent Team</h2></div>
+    <ul class="bullet-list">
+      <li><strong>Pick the workflow</strong> — One workflow you run weekly. Repeatable, clear inputs/outputs.</li>
+      <li><strong>Map the steps</strong> — List every step in the current workflow. Who does it, how long it takes.</li>
+      <li><strong>Mark the agent candidates</strong> — Which steps are repeatable + recoverable if wrong?</li>
+      <li><strong>Draw the handoffs</strong> — What does each agent receive? What does it produce? Where does a human check in?</li>
+    </ul>
+    <p class="slide-key">Your first agent team should solve one workflow — not your whole operation. Scope to what you can launch in a week.</p>
+  </div>
+
+  <!-- 19 TOOL SELECTION -->
+  <div class="slide content" data-slide="19">
+    <div class="slide-header"><p class="s-label">Module 3 — Tools</p><h2>Choosing Your Tools (Without an Engineering Team)</h2></div>
+    <table class="content-table" style="max-width:880px">
+      <thead><tr><th>Layer</th><th>Options</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Orchestration (the "manager" layer)</strong></td><td>Claude via API (best reasoning, excellent at multi-step); GPT-4o (strong alternative); Cursor / Claude Code (if comfortable with simple scripts)</td></tr>
+        <tr><td><strong>No-code workflow building</strong></td><td>n8n — open source, self-hostable, connects to everything; Make (formerly Integromat) — polished, lower technical bar; Zapier AI — familiar to non-technical users, limited agent logic</td></tr>
+        <tr><td><strong>Specialist tasks</strong></td><td>Web search: Perplexity API, Brave Search API; Document reading: any model with file input; Email/calendar: native integrations in n8n / Make</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">Don't pick all of these now. Pick one orchestrator and one workflow tool. Start there.</p>
+  </div>
+
+  <!-- 20 ARTIFACT: AGENT TEAM BLUEPRINT -->
+  <div class="slide content" data-slide="20">
+    <div class="slide-header"><p class="s-label">Module 3 — Artifact</p><h2>Artifact: Your Agent Team Blueprint</h2></div>
+    <div class="artifact-box">
+      <div class="artifact-label">Design your first agent team before you build it.</div>
+      <p><strong>Workflow name:</strong> _______________ &nbsp; <strong>Goal (one sentence):</strong> _______________ &nbsp; <strong>Trigger:</strong> _______________</p>
+      <table class="content-table">
+        <thead><tr><th>Agent #</th><th>Role</th><th>Input</th><th>Output</th><th>Tool / Model</th><th>Human checkpoint?</th></tr></thead>
+        <tbody>
+          <tr><td>1.</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>2.</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>3.</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>4.</td><td></td><td></td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px"><strong>What the human does at the end:</strong> _______________ &nbsp; <strong>What the human does if an agent fails:</strong> _______________</p>
+      <p style="margin-top:10px;font-style:italic">This blueprint is what you hand to an engineer — or build yourself in n8n.</p>
+    </div>
+  </div>
+
+  <!-- 21 MODULE 4 DIVIDER -->
+  <div class="slide statement" data-slide="21">
+    <p class="s-label">Module 4 · 10 Minutes</p>
+    <p class="s-title">Build, Test, Evaluate</p>
+    <p class="s-sub">How you know it's working</p>
+  </div>
+
+  <!-- 22 THREE RUNS -->
+  <div class="slide content" data-slide="22">
+    <div class="slide-header"><p class="s-label">Module 4 — Testing</p><h2>Three Runs Before You Trust It</h2></div>
+    <div class="three-col">
+      <div class="col-box">
+        <div class="col-label">Run 1 — Happy Path</div>
+        <h3>Give it a perfect input</h3>
+        <p>Does it produce the expected output?</p>
+        <em>If not: fix the agent that broke the chain before adding complexity.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Run 2 — Edge Case</div>
+        <h3>Give it something unusual</h3>
+        <p>Short input, missing field, ambiguous language. Does it fail gracefully or catastrophically?</p>
+        <em>If catastrophic: add a validation step before the problem agent.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Run 3 — Adversarial Input</div>
+        <h3>Give it what it shouldn't see</h3>
+        <p>Malformed email, empty document, unexpected language. Does the reviewer agent catch it?</p>
+        <em>Does the human checkpoint fire when it should?</em>
+      </div>
+    </div>
+    <p class="slide-key">Three runs tells you more than three weeks of planning.</p>
+  </div>
+
+  <!-- 23 EVAL CHECKLIST -->
+  <div class="slide content" data-slide="23">
+    <div class="slide-header"><p class="s-label">Module 4 — Evaluation</p><h2>Your Agent Team Eval Checklist</h2></div>
+    <table class="content-table" style="max-width:900px">
+      <thead><tr><th>Signal</th><th>What to measure</th><th>How to measure</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Speed</strong></td><td>Time from trigger to output</td><td>Timestamp first run vs. manual baseline</td></tr>
+        <tr><td><strong>Accuracy</strong></td><td>% of outputs that pass human review unchanged</td><td>Track edits over first 20 runs</td></tr>
+        <tr><td><strong>Failure rate</strong></td><td>% of runs that require human intervention</td><td>Log every interruption</td></tr>
+        <tr><td><strong>Edge case handling</strong></td><td>Does it fail gracefully or break?</td><td>Run adversarial test monthly</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">Editing &gt;30% of outputs significantly → the agent prompt needs work. Editing &lt;10% → you're ready to scale.</p>
+  </div>
+
+  <!-- 24 CLOSE DIVIDER -->
+  <div class="slide statement" data-slide="24">
+    <p class="s-label">Close · 10 Minutes</p>
+    <p class="s-title">What to Build This Week</p>
+  </div>
+
+  <!-- 25 ONE WORKFLOW -->
+  <div class="slide content" data-slide="25">
+    <div class="slide-header"><p class="s-label">Close — Next Step</p><h2>One Workflow. This Week.</h2></div>
+    <div class="quote-block"><p>The mistake: building an agent platform before you've shipped one agent team.</p></div>
+    <table class="content-table" style="max-width:800px">
+      <thead><tr><th>Your role</th><th>Start here</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PM</strong></td><td>Weekly status report (Jira → summarize → format → Slack)</td></tr>
+        <tr><td><strong>Sales</strong></td><td>Account research pipeline (company → brief → email draft)</td></tr>
+        <tr><td><strong>Marketing</strong></td><td>Content repurposing (blog → LinkedIn + email + social)</td></tr>
+        <tr><td><strong>Operations</strong></td><td>Vendor update triage (email → classify → route → acknowledge)</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">Pick the workflow that is most repetitive, most time-consuming, and has the clearest input/output. Build that first.</p>
+  </div>
+
+  <!-- 26 THREE NEXT STEPS -->
+  <div class="slide content" data-slide="26">
+    <div class="slide-header"><p class="s-label">Close — Actions</p><h2>Three Things You Can Do Before Friday</h2></div>
+    <ul class="bullet-list">
+      <li><strong>Complete your Agent Team Blueprint</strong> — fill in the artifact from Module 3 for your chosen workflow</li>
+      <li><strong>Set up n8n or Make</strong> — free accounts, 30 minutes to get your first test workflow running</li>
+      <li><strong>Run your first test</strong> — a single agent, one step. It doesn't have to be perfect. It has to run.</li>
+    </ul>
+    <p class="slide-caveat">An imperfect agent team that ships beats a perfect one that's still in the planning doc.</p>
+  </div>
+
+  <!-- 27 SUBSCRIBE CTA -->
+  <div class="slide content" data-slide="27">
+    <div class="slide-header"><h2>Get the Blueprint + Go Deeper</h2></div>
+    <div class="cta-box">
+      <p>Get the Agent Team Blueprint template (Google Sheets, ready to fill in), the Evaluation Checklist (track your first 20 runs), and early access to the 4-week paid cohort: <em>Build Your First Production Agent Team</em> — where you ship a real agent team for your actual workflow, with a small group and live feedback.</p>
+      <a class="cta-btn" href="https://substack.com/@angshuman" target="_blank">Subscribe — it's free →</a>
+    </div>
+    <p style="margin-top:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);text-align:center">Questions? <a href="mailto:angshuman.rudra@gmail.com" style="color:var(--amber)">angshuman.rudra@gmail.com</a></p>
+  </div>
+
+</div>
+
+<div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+<div id="slide-counter">1 / 27</div>
+<div id="nav-hint">← → Space to navigate</div>
+
+<script>
+const TOTAL = 27; let current = 1;
+const counter = document.getElementById('slide-counter');
+const fill = document.getElementById('progress-bar-fill');
+const navHint = document.getElementById('nav-hint');
+function getSlide(n){return document.querySelector(`.slide[data-slide="${n}"]`);}
+function updateUI(){counter.textContent=`${current} / ${TOTAL}`;fill.style.width=`${(current/TOTAL)*100}%`;}
+function goTo(n){if(n<1||n>TOTAL)return;const prev=getSlide(current),next=getSlide(n);if(prev)prev.classList.remove('active');current=n;if(next)next.classList.add('active');updateUI();}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();goTo(current+1);}else if(e.key==='ArrowLeft'){e.preventDefault();goTo(current-1);}});
+let hintTimer=setTimeout(()=>navHint.classList.add('hidden'),4000);
+document.addEventListener('keydown',()=>{navHint.classList.remove('hidden');clearTimeout(hintTimer);hintTimer=setTimeout(()=>navHint.classList.add('hidden'),2500);});
+updateUI();
+</script>
+</body>
+</html>

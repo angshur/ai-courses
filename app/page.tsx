@@ -17,9 +17,9 @@ const COURSES = [
     title: "AI Won't Take Your Job. Here's What Will.",
     tagline: "The fear is real. The diagnosis is wrong. Here's what's actually happening.",
     audience: "Mid-career professionals, any industry",
-    live: false,
-    url: "https://substack.com/@angshuman",
-    cta: "Notify me →",
+    live: true,
+    url: "/course-ai-wont-take-your-job.html",
+    cta: "View slides →",
   },
   {
     num: "03",
@@ -27,9 +27,9 @@ const COURSES = [
     title: "The Context Moat: Your Real Competitive Advantage in AI",
     tagline: "Everyone's using the same models. The winner isn't who has the best AI. It's who has the best context.",
     audience: "Senior PMs, heads of product, CTOs",
-    live: false,
-    url: "https://substack.com/@angshuman",
-    cta: "Notify me →",
+    live: true,
+    url: "/course-context-moat.html",
+    cta: "View slides →",
   },
   {
     num: "04",
@@ -37,9 +37,9 @@ const COURSES = [
     title: "Build Agent Teams for Real Business Workflows",
     tagline: "Stop using AI tools one at a time. Here's how to build systems that do the work while you sleep.",
     audience: "Senior PMs, builders, founders",
-    live: false,
-    url: "https://substack.com/@angshuman",
-    cta: "Notify me →",
+    live: true,
+    url: "/course-agent-teams.html",
+    cta: "View slides →",
   },
 ];
 
@@ -77,7 +77,7 @@ export default function Home() {
           Free courses for product managers, career professionals, and builders. Practical frameworks, not hype.
         </p>
         <p style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(20px, 2.2vw, 28px)", color: "var(--amber)", fontWeight: 600 }}>
-          One curriculum live. Three more in progress.
+          Four courses. All free. All live.
         </p>
       </section>
 

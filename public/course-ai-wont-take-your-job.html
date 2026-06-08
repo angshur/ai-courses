@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Won't Take Your Job. Here's What Will. — Angshuman Rudra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Caveat:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --cream: #FAF7F2;
+  --ink: #1C1917;
+  --amber: #D97706;
+  --amber-light: #FEF3C7;
+  --warm-gray: #78716C;
+  --border: #E7E0D5;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'DM Sans', system-ui, sans-serif; background: var(--ink); }
+#deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+.slide { position: absolute; inset: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 80px 80px; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 300ms ease, transform 300ms ease; }
+.slide.active { opacity: 1; transform: translateY(0); pointer-events: all; }
+.slide.statement { background: var(--ink); text-align: center; }
+.slide.statement .s-title { font-family: 'Lora', Georgia, serif; font-size: clamp(32px, 4.5vw, 58px); font-weight: 600; color: #FFFFFF; line-height: 1.2; letter-spacing: -0.02em; max-width: 900px; }
+.slide.statement .s-sub { margin-top: 24px; font-family: 'DM Sans', sans-serif; font-size: clamp(15px, 1.6vw, 20px); color: var(--warm-gray); font-weight: 400; max-width: 680px; }
+.slide.statement .s-caveat { margin-top: 32px; font-family: 'Caveat', cursive; font-size: clamp(20px, 2.2vw, 30px); color: var(--amber); font-weight: 600; }
+.slide.statement .s-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 20px; }
+.slide.content { background: var(--cream); }
+.slide-header { text-align: center; margin-bottom: 36px; }
+.slide-header .s-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 12px; }
+.slide-header h2 { font-family: 'Lora', Georgia, serif; font-size: clamp(24px, 3vw, 42px); font-weight: 600; color: var(--ink); letter-spacing: -0.02em; line-height: 1.2; }
+.slide-header .subtitle { margin-top: 8px; font-family: 'DM Sans', sans-serif; font-size: clamp(13px, 1.3vw, 16px); color: var(--warm-gray); }
+.bullet-list { list-style: none; display: flex; flex-direction: column; gap: 16px; max-width: 760px; width: 100%; }
+.bullet-list li { display: flex; align-items: flex-start; gap: 14px; font-family: 'DM Sans', sans-serif; font-size: clamp(14px, 1.5vw, 18px); color: var(--ink); line-height: 1.5; }
+.bullet-list li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); flex-shrink: 0; margin-top: 7px; }
+.slide-caveat { margin-top: 32px; font-family: 'Caveat', cursive; font-size: clamp(18px, 2vw, 26px); color: var(--amber); font-weight: 600; text-align: center; }
+.slide-key { margin-top: 28px; font-family: 'DM Sans', sans-serif; font-size: clamp(13px, 1.3vw, 16px); color: var(--ink); font-weight: 600; text-align: center; font-style: italic; max-width: 700px; }
+.content-table { width: 100%; max-width: 860px; border-collapse: collapse; font-family: 'DM Sans', sans-serif; font-size: clamp(12px, 1.2vw, 15px); }
+.content-table th { background: var(--ink); color: #fff; padding: 10px 16px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.content-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); color: var(--ink); line-height: 1.4; vertical-align: top; }
+.content-table tr:last-child td { border-bottom: none; }
+.content-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+.three-zones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 960px; width: 100%; }
+.zone-box { padding: 24px; border-radius: 10px; border: 1px solid var(--border); background: #fff; }
+.zone-box .zone-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+.zone-box h3 { font-family: 'Lora', Georgia, serif; font-size: clamp(15px, 1.5vw, 19px); font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.zone-box p { font-family: 'DM Sans', sans-serif; font-size: clamp(12px, 1.2vw, 14px); color: var(--warm-gray); line-height: 1.5; }
+.zone-box em { display: block; margin-top: 8px; font-style: italic; font-size: clamp(11px, 1.1vw, 13px); }
+.five-hours { display: flex; flex-direction: column; gap: 12px; max-width: 820px; width: 100%; }
+.hour-row { display: flex; gap: 20px; align-items: flex-start; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px 20px; }
+.hour-num { font-family: 'Caveat', cursive; font-size: 24px; color: var(--amber); font-weight: 700; flex-shrink: 0; line-height: 1; width: 32px; }
+.hour-body { font-family: 'DM Sans', sans-serif; font-size: clamp(12px, 1.2vw, 15px); color: var(--ink); line-height: 1.45; }
+.hour-body strong { display: block; font-weight: 600; margin-bottom: 2px; }
+.artifact-box { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; max-width: 820px; width: 100%; box-shadow: 0 1px 3px rgba(28,25,23,0.08); }
+.artifact-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 14px; }
+.artifact-box p { font-family: 'DM Sans', sans-serif; font-size: clamp(12px, 1.2vw, 14px); color: var(--warm-gray); margin-bottom: 14px; line-height: 1.5; }
+.cta-box { background: var(--amber-light); border: 1px solid #F6D860; border-radius: 12px; padding: 32px 40px; max-width: 700px; width: 100%; text-align: center; }
+.cta-box p { font-family: 'DM Sans', sans-serif; font-size: clamp(13px, 1.3vw, 16px); color: var(--ink); line-height: 1.6; margin-bottom: 20px; }
+.cta-btn { display: inline-block; background: var(--amber); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; padding: 12px 36px; border-radius: 8px; text-decoration: none; }
+.back-link { position: fixed; top: 16px; left: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--warm-gray); text-decoration: none; z-index: 200; letter-spacing: 0.04em; }
+.back-link:hover { color: var(--amber); }
+#progress-bar-track { position: fixed; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.08); z-index: 200; }
+#progress-bar-fill { height: 100%; background: var(--amber); transition: width 300ms ease; }
+#slide-counter { position: fixed; bottom: 18px; right: 24px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--warm-gray); z-index: 200; letter-spacing: 0.04em; }
+#nav-hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); font-family: 'DM Sans', sans-serif; font-size: 12px; color: #57534E; z-index: 200; pointer-events: none; opacity: 1; transition: opacity 600ms ease; }
+#nav-hint.hidden { opacity: 0; }
+</style>
+</head>
+<body>
+
+<a href="/" class="back-link">← All courses</a>
+
+<div id="deck">
+
+  <!-- 1 COVER -->
+  <div class="slide statement active" data-slide="1">
+    <p class="s-label">Free Lightning Lesson · 75 Minutes</p>
+    <p class="s-title">"AI Won't Take Your Job. Here's What Will."</p>
+    <p class="s-sub">The fear is real. The diagnosis is wrong. Here's what's actually happening.</p>
+    <p class="s-caveat">By Angshuman Rudra</p>
+  </div>
+
+  <!-- 2 OVERVIEW -->
+  <div class="slide content" data-slide="2">
+    <div class="slide-header"><h2>What We'll Cover</h2></div>
+    <table class="content-table" style="max-width:700px">
+      <thead><tr><th>Section</th><th>Time</th><th>Topic</th></tr></thead>
+      <tbody>
+        <tr><td>Intro</td><td>10 min</td><td>The Fear Is Legitimate — And Partially Wrong</td></tr>
+        <tr><td>Module 1</td><td>15 min</td><td>What AI Actually Does</td></tr>
+        <tr><td>Module 2</td><td>20 min</td><td>Your Job Through an AI Lens</td></tr>
+        <tr><td>Module 3</td><td>20 min</td><td>The Five-Hour Plan</td></tr>
+        <tr><td>Close</td><td>10 min</td><td>The Mindset Shift</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3 INTRO DIVIDER -->
+  <div class="slide statement" data-slide="3">
+    <p class="s-label">Intro · 10 Minutes</p>
+    <p class="s-title">The Fear Is Legitimate — And Partially Wrong</p>
+  </div>
+
+  <!-- 4 THE HOOK -->
+  <div class="slide statement" data-slide="4">
+    <p class="s-title">"AI will eliminate 300 million jobs in the next decade."</p>
+    <p class="s-sub">These headlines aren't wrong. They're just incomplete. They tell you what disappears. They don't tell you what replaces it.</p>
+    <p class="s-caveat">The threat isn't the technology. It's falling behind the people who adapt.</p>
+  </div>
+
+  <!-- 5 THIS HAS HAPPENED BEFORE -->
+  <div class="slide content" data-slide="5">
+    <div class="slide-header"><h2>This Has Happened Before</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Technology</th><th>What "died"</th><th>What actually happened</th></tr></thead>
+      <tbody>
+        <tr><td>ATMs (1970s)</td><td>Bank teller jobs</td><td>Teller count went up — branches expanded, roles shifted</td></tr>
+        <tr><td>Spreadsheets (1980s)</td><td>Bookkeeper jobs</td><td>Accountants grew in number — more financial analysis, not less</td></tr>
+        <tr><td>Search engines (2000s)</td><td>Research jobs</td><td>More research roles, not fewer — the bar for output rose</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-caveat">Tasks disappear. Jobs evolve. AI is following the same pattern — faster, broader, but the same shape.</p>
+  </div>
+
+  <!-- 6 THREE ZONES -->
+  <div class="slide content" data-slide="6">
+    <div class="slide-header"><h2>Every Job Has Three Zones</h2></div>
+    <div class="three-zones">
+      <div class="zone-box">
+        <div class="zone-label">Zone 1</div>
+        <h3>AI Takes Over</h3>
+        <p>Tasks AI does faster, cheaper, better. These disappear from your job description.</p>
+        <em>Formatting reports, scheduling, summarizing, first-draft writing</em>
+      </div>
+      <div class="zone-box">
+        <div class="zone-label">Zone 2</div>
+        <h3>AI Amplifies You</h3>
+        <p>Tasks where AI makes you 5–10x more productive. You still own the work.</p>
+        <em>Research, analysis, proposal writing, client prep, presentations</em>
+      </div>
+      <div class="zone-box">
+        <div class="zone-label">Zone 3</div>
+        <h3>AI Can't Touch</h3>
+        <p>Tasks that require judgment, trust, relationships, context, physical presence.</p>
+        <em>Reading a room, building client relationships, managing through change</em>
+      </div>
+    </div>
+    <p class="slide-key">Every job — yours included — has all three zones. The ratio is what matters.</p>
+  </div>
+
+  <!-- 7 MODULE 1 DIVIDER -->
+  <div class="slide statement" data-slide="7">
+    <p class="s-label">Module 1 · 15 Minutes</p>
+    <p class="s-title">What AI Actually Does</p>
+    <p class="s-sub">Plain English. No jargon.</p>
+  </div>
+
+  <!-- 8 WHAT AI IS -->
+  <div class="slide content" data-slide="8">
+    <div class="slide-header"><h2>What AI Actually Is</h2></div>
+    <ul class="bullet-list" style="max-width:700px">
+      <li>AI is a pattern-matching machine trained on more text than any human could read in a thousand lifetimes</li>
+      <li>It doesn't think. It predicts what comes next based on patterns it's seen.</li>
+      <li>It's extraordinarily good at tasks that have patterns: writing, summarizing, classifying, translating, answering questions</li>
+      <li>It has no judgment, no lived experience, no skin in the game</li>
+      <li>When it sounds confident and is wrong, it's not lying — it's pattern-matching poorly</li>
+    </ul>
+    <p class="slide-caveat">Understanding this one thing changes how you use AI at work.</p>
+  </div>
+
+  <!-- 9 PATTERN VS JUDGMENT -->
+  <div class="slide content" data-slide="9">
+    <div class="slide-header"><h2>The Only Split That Matters</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Pattern Tasks</th><th>Judgment Tasks</th></tr></thead>
+      <tbody>
+        <tr><td>Has a clear right answer</td><td>Requires weighing competing values</td></tr>
+        <tr><td>Can be learned from examples</td><td>Requires context AI doesn't have</td></tr>
+        <tr><td>Improves with repetition</td><td>Requires accountability</td></tr>
+        <tr><td>Low cost to be wrong</td><td>High cost to be wrong</td></tr>
+        <tr><td><strong>AI does this well</strong></td><td><strong>AI does this poorly</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">HR: Scheduling interviews = pattern. Deciding who to hire = judgment.<br/>Legal: Summarizing a contract = pattern. Advising on risk = judgment.</p>
+  </div>
+
+  <!-- 10 WHAT AI CAN'T DO -->
+  <div class="slide content" data-slide="10">
+    <div class="slide-header"><h2>What AI Can't Do (Yet)</h2></div>
+    <ul class="bullet-list">
+      <li><strong>Build trust</strong> — clients, patients, customers trust people, not systems</li>
+      <li><strong>Be accountable</strong> — when something goes wrong, someone has to own it</li>
+      <li><strong>Read a room</strong> — emotional intelligence, body language, what's not being said</li>
+      <li><strong>Handle novelty well</strong> — AI fails when a situation has no pattern to match</li>
+      <li><strong>Know what it doesn't know</strong> — it confidently fills gaps with plausible-sounding wrong answers</li>
+    </ul>
+    <p class="slide-key">The roles that survive and grow are the ones where the cost of being wrong is high, and the value of human judgment is visible.</p>
+  </div>
+
+  <!-- 11 ARTIFACT: PATTERN VS JUDGMENT MAP -->
+  <div class="slide content" data-slide="11">
+    <div class="slide-header"><h2>Artifact: Your Pattern vs. Judgment Map</h2></div>
+    <div class="artifact-box">
+      <div class="artifact-label">Module 1 Artifact — Fill This In</div>
+      <p>List the 5 tasks you spend the most time on. Place each one.</p>
+      <table class="content-table">
+        <thead><tr><th>#</th><th>Task</th><th>Pattern / Judgment / Mixed</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>1.</td><td></td><td></td><td></td></tr>
+          <tr><td>2.</td><td></td><td></td><td></td></tr>
+          <tr><td>3.</td><td></td><td></td><td></td></tr>
+          <tr><td>4.</td><td></td><td></td><td></td></tr>
+          <tr><td>5.</td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px">Tasks marked "Pattern" — AI is capable of helping here now. Tasks marked "Judgment" — this is your protection.</p>
+    </div>
+  </div>
+
+  <!-- 12 MODULE 2 DIVIDER -->
+  <div class="slide statement" data-slide="12">
+    <p class="s-label">Module 2 · 20 Minutes · The Task Audit</p>
+    <p class="s-title">Your Job Through an AI Lens</p>
+  </div>
+
+  <!-- 13 STOP THINKING JOB TITLE -->
+  <div class="slide content" data-slide="13">
+    <div class="slide-header"><h2>Stop Thinking About Your Job Title. Think About Your Tasks.</h2></div>
+    <ul class="bullet-list">
+      <li>Job titles are lagging indicators — they describe what you did, not what you do</li>
+      <li>AI doesn't eliminate job titles. It eliminates tasks within jobs.</li>
+      <li>The PM who understands AI keeps their job and gets promoted. The PM who doesn't gets replaced by the one who does.</li>
+      <li>The only way to know your real exposure is to audit your actual tasks — not your job description</li>
+    </ul>
+    <p class="slide-caveat">Your job title is not your job. Your tasks are.</p>
+  </div>
+
+  <!-- 14 TASK AUDIT FRAMEWORK -->
+  <div class="slide content" data-slide="14">
+    <div class="slide-header"><h2>The Task Audit: Three Categories</h2></div>
+    <div class="three-zones">
+      <div class="zone-box">
+        <div class="zone-label">AI-Vulnerable</div>
+        <h3>AI does it better</h3>
+        <p>Tasks AI can already do, or will within 2 years. AI does it faster, cheaper, at scale.</p>
+        <em>Your goal: stop spending time here.</em>
+      </div>
+      <div class="zone-box">
+        <div class="zone-label">AI-Enhanced</div>
+        <h3>AI makes you 5–10×</h3>
+        <p>You still own the output. AI does the heavy lifting.</p>
+        <em>Your goal: become the expert at using AI here.</em>
+      </div>
+      <div class="zone-box">
+        <div class="zone-label">AI-Proof</div>
+        <h3>Your career moat</h3>
+        <p>Tasks requiring judgment, trust, relationships, accountability. The value of doing these goes up as AI handles everything else.</p>
+        <em>Your goal: go deeper here.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15 WORKED EXAMPLE HR -->
+  <div class="slide content" data-slide="15">
+    <div class="slide-header"><h2>A Real Task Audit: HR Manager</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Task</th><th>Category</th><th>What changes</th></tr></thead>
+      <tbody>
+        <tr><td>Scheduling interviews</td><td>AI-Vulnerable</td><td>AI handles this now</td></tr>
+        <tr><td>Writing job descriptions</td><td>AI-Vulnerable</td><td>AI generates drafts in seconds</td></tr>
+        <tr><td>Screening resumes for fit</td><td>AI-Enhanced</td><td>AI flags patterns; you decide</td></tr>
+        <tr><td>Designing comp structures</td><td>AI-Enhanced</td><td>AI models scenarios; you recommend</td></tr>
+        <tr><td>Managing a difficult performance conversation</td><td>AI-Proof</td><td>Trust, judgment, legal nuance</td></tr>
+        <tr><td>Building relationships with hiring managers</td><td>AI-Proof</td><td>Influence, context, history</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">This HR manager's job doesn't disappear. The first two rows disappear from her job. She gains capacity to go deeper on the last three.</p>
+  </div>
+
+  <!-- 16 WHAT YOUR RATIO MEANS -->
+  <div class="slide content" data-slide="16">
+    <div class="slide-header"><h2>What Your Ratio Tells You</h2></div>
+    <div class="three-zones">
+      <div class="zone-box">
+        <div class="zone-label">Mostly AI-Vulnerable</div>
+        <h3>High exposure</h3>
+        <p>Most time on tasks AI does better. Not a crisis — a signal to upskill and shift toward enhanced + proof tasks. The shift can happen in your current role.</p>
+      </div>
+      <div class="zone-box">
+        <div class="zone-label">Mostly AI-Enhanced</div>
+        <h3>Strong position</h3>
+        <p>You're in the leverage zone. AI makes you more valuable, not less. Your job: learn to use these tools well before someone else does.</p>
+      </div>
+      <div class="zone-box">
+        <div class="zone-label">Mostly AI-Proof</div>
+        <h3>Protected</h3>
+        <p>Your work depends on judgment, relationships, accountability. These roles grow in value. Your risk is underestimating how AI can amplify you.</p>
+      </div>
+    </div>
+    <p class="slide-key">No ratio is fatal. Every ratio is actionable.</p>
+  </div>
+
+  <!-- 17 ARTIFACT: TASK AUDIT -->
+  <div class="slide content" data-slide="17">
+    <div class="slide-header"><h2>Artifact: Your Task Audit</h2></div>
+    <div class="artifact-box">
+      <div class="artifact-label">Module 2 Anchor Artifact — The Screenshot People Share</div>
+      <p>List your 10 main tasks. Categorize each. Count your V / E / P — that's your exposure profile.</p>
+      <table class="content-table">
+        <thead><tr><th>#</th><th>Task</th><th>Category</th><th>What changes for me</th></tr></thead>
+        <tbody>
+          <tr><td>1.</td><td></td><td>V / E / P</td><td></td></tr>
+          <tr><td>2.</td><td></td><td>V / E / P</td><td></td></tr>
+          <tr><td>3.</td><td></td><td>V / E / P</td><td></td></tr>
+          <tr><td>4.</td><td></td><td>V / E / P</td><td></td></tr>
+          <tr><td>5.</td><td></td><td>V / E / P</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 18 MODULE 3 DIVIDER -->
+  <div class="slide statement" data-slide="18">
+    <p class="s-label">Module 3 · 20 Minutes</p>
+    <p class="s-title">The Five-Hour Plan</p>
+    <p class="s-sub">You don't need to become an AI expert. You need to be the person at work who understands AI.</p>
+  </div>
+
+  <!-- 19 WRONG GOAL vs RIGHT GOAL -->
+  <div class="slide content" data-slide="19">
+    <div class="slide-header"><h2>The Wrong Goal and the Right One</h2></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:820px;width:100%">
+      <div class="zone-box" style="border-color:#C4B9AF">
+        <div class="zone-label" style="color:#A8A29E">The wrong goal</div>
+        <h3 style="color:#A8A29E">"I need to learn AI."</h3>
+        <p>Too broad. No finish line. Paralyzing. Most "learn AI" content is either too technical or too surface-level to be useful at work.</p>
+      </div>
+      <div class="zone-box" style="background:var(--amber-light);border-color:#F6D860">
+        <div class="zone-label">The right goal</div>
+        <h3>"I need to be the most AI-literate person in my immediate team."</h3>
+        <p>Finite. Achievable. In most teams, that bar is lower than you think. The person who clears it first gets the interesting projects.</p>
+      </div>
+    </div>
+    <p class="slide-caveat">You don't need to beat AI. You need to be ahead of the colleagues who are ignoring it.</p>
+  </div>
+
+  <!-- 20 THE FIVE HOURS -->
+  <div class="slide content" data-slide="20">
+    <div class="slide-header"><h2>Five Hours. Starting Monday.</h2></div>
+    <div class="five-hours">
+      <div class="hour-row"><span class="hour-num">1</span><div class="hour-body"><strong>Understand what AI actually is</strong>Read one good explainer. Goal: explain pattern vs. judgment to a colleague in 2 minutes.</div></div>
+      <div class="hour-row"><span class="hour-num">2</span><div class="hour-body"><strong>Run your Task Audit</strong>Do the worksheet from Module 2. Share it with one person you trust.</div></div>
+      <div class="hour-row"><span class="hour-num">3</span><div class="hour-body"><strong>Use AI for one real task at work</strong>Pick a task from your AI-Enhanced list. Do it with AI assistance. Note what surprised you.</div></div>
+      <div class="hour-row"><span class="hour-num">4</span><div class="hour-body"><strong>Find the AI tool your industry uses</strong>Legal has Harvey. HR has Lattice AI. Finance has Planful. Know what your peers are already using.</div></div>
+      <div class="hour-row"><span class="hour-num">5</span><div class="hour-body"><strong>Write one paragraph about AI's impact on your role</strong>Plain language. No jargon. When someone asks what you think about AI at work, you have an answer.</div></div>
+    </div>
+  </div>
+
+  <!-- 21 WHY FIVE HOURS IS ENOUGH -->
+  <div class="slide statement" data-slide="21">
+    <p class="s-title">Why Five Hours Is Enough to Get Ahead</p>
+    <p class="s-sub">The average professional has spent 0 structured hours thinking about AI's impact on their specific role. Most "AI anxiety" comes from consuming headlines, not doing experiments. Five structured hours puts you ahead of 80% of your colleagues — not because you know more, but because you've actually engaged.</p>
+    <p class="s-caveat">The gap isn't about technical knowledge. It's about willingness to engage before it's urgent.</p>
+  </div>
+
+  <!-- 22 ARTIFACT: FIVE-HOUR PLAN -->
+  <div class="slide content" data-slide="22">
+    <div class="slide-header"><h2>Artifact: Your Five-Hour Plan</h2></div>
+    <div class="artifact-box">
+      <div class="artifact-label">Module 3 Artifact — Schedule These Like Client Meetings</div>
+      <table class="content-table">
+        <thead><tr><th>Hour</th><th>Task</th><th>Scheduled for</th></tr></thead>
+        <tbody>
+          <tr><td>Hour 1</td><td>Read one good AI explainer</td><td></td></tr>
+          <tr><td>Hour 2</td><td>Complete your Task Audit</td><td></td></tr>
+          <tr><td>Hour 3</td><td>Use AI for one real work task</td><td></td></tr>
+          <tr><td>Hour 4</td><td>Research your industry's AI tool</td><td></td></tr>
+          <tr><td>Hour 5</td><td>Write one paragraph about AI's impact on your role</td><td></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px">Done with all five? You're now the most AI-literate person in most rooms you walk into.</p>
+    </div>
+  </div>
+
+  <!-- 23 CLOSE DIVIDER -->
+  <div class="slide statement" data-slide="23">
+    <p class="s-label">Close · 10 Minutes</p>
+    <p class="s-title">The Mindset Shift</p>
+  </div>
+
+  <!-- 24 FROM vs TO -->
+  <div class="slide content" data-slide="24">
+    <div class="slide-header"><h2>From "AI vs. Me" to "AI With Me"</h2></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:820px;width:100%">
+      <div class="zone-box" style="border-color:#C4B9AF">
+        <div class="zone-label" style="color:#A8A29E">The anxiety frame</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:#A8A29E">
+          <li>AI is coming for my job.</li>
+          <li>I need to defend my territory.</li>
+          <li>If AI can do my job, I'm replaceable.</li>
+        </ul>
+      </div>
+      <div class="zone-box" style="background:var(--amber-light);border-color:#F6D860">
+        <div class="zone-label">The leverage frame</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)">
+          <li>AI handles the tasks I find tedious.</li>
+          <li>I can do more valuable work with the same hours.</li>
+          <li>My judgment, relationships, and accountability are worth more — not less.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="slide-key">The professionals who lose out aren't the ones AI replaces. They're the ones who spent the next three years waiting to see what happens.</p>
+  </div>
+
+  <!-- 25 THREE THINGS THIS WEEK -->
+  <div class="slide content" data-slide="25">
+    <div class="slide-header"><h2>Three Things You Can Do Before Friday</h2></div>
+    <ul class="bullet-list">
+      <li><strong>Complete your Task Audit</strong> — know your V/E/P ratio before you close your laptop today</li>
+      <li><strong>Block Hour 3 in your calendar</strong> — pick one real task at work and run it through AI this week</li>
+      <li><strong>Tell one person what you learned today</strong> — the act of explaining it locks it in</li>
+    </ul>
+    <p class="slide-caveat">The information without the action is just more content. These three things change that.</p>
+  </div>
+
+  <!-- 26 SUBSCRIBE CTA -->
+  <div class="slide content" data-slide="26">
+    <div class="slide-header"><h2>Get the Worksheets + Early Access</h2></div>
+    <div class="cta-box">
+      <p>Get all three artifacts from today (Task Audit, Pattern vs. Judgment Map, Five-Hour Plan Card) formatted and ready to use — plus early access to the next course as it launches.</p>
+      <a class="cta-btn" href="https://substack.com/@angshuman" target="_blank">Subscribe — it's free →</a>
+    </div>
+    <p style="margin-top:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);text-align:center">Questions? <a href="mailto:angshuman.rudra@gmail.com" style="color:var(--amber)">angshuman.rudra@gmail.com</a></p>
+  </div>
+
+</div>
+
+<div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+<div id="slide-counter">1 / 26</div>
+<div id="nav-hint">← → Space to navigate</div>
+
+<script>
+const TOTAL = 26;
+let current = 1;
+const counter = document.getElementById('slide-counter');
+const fill = document.getElementById('progress-bar-fill');
+const navHint = document.getElementById('nav-hint');
+
+function getSlide(n) { return document.querySelector(`.slide[data-slide="${n}"]`); }
+function updateUI() { counter.textContent = `${current} / ${TOTAL}`; fill.style.width = `${(current / TOTAL) * 100}%`; }
+function goTo(n) {
+  if (n < 1 || n > TOTAL) return;
+  const prev = getSlide(current); const next = getSlide(n);
+  if (prev) prev.classList.remove('active');
+  current = n;
+  if (next) next.classList.add('active');
+  updateUI();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+});
+let hintTimer = setTimeout(() => navHint.classList.add('hidden'), 4000);
+document.addEventListener('keydown', () => { navHint.classList.remove('hidden'); clearTimeout(hintTimer); hintTimer = setTimeout(() => navHint.classList.add('hidden'), 2500); });
+updateUI();
+</script>
+</body>
+</html>

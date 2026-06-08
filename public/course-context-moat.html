@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Context Moat — Angshuman Rudra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Caveat:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root { --cream:#FAF7F2; --ink:#1C1917; --amber:#D97706; --amber-light:#FEF3C7; --warm-gray:#78716C; --border:#E7E0D5; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;background:var(--ink);}
+#deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+.slide{position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 80px 80px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity 300ms ease,transform 300ms ease;}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:all;}
+.slide.statement{background:var(--ink);text-align:center;}
+.slide.statement .s-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:20px;}
+.slide.statement .s-title{font-family:'Lora',Georgia,serif;font-size:clamp(32px,4.5vw,58px);font-weight:600;color:#fff;line-height:1.2;letter-spacing:-.02em;max-width:860px;}
+.slide.statement .s-sub{margin-top:24px;font-family:'DM Sans',sans-serif;font-size:clamp(15px,1.6vw,20px);color:var(--warm-gray);max-width:680px;line-height:1.6;}
+.slide.statement .s-caveat{margin-top:32px;font-family:'Caveat',cursive;font-size:clamp(20px,2.2vw,30px);color:var(--amber);font-weight:600;}
+.slide.content{background:var(--cream);}
+.slide-header{text-align:center;margin-bottom:36px;}
+.slide-header .s-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:12px;}
+.slide-header h2{font-family:'Lora',Georgia,serif;font-size:clamp(24px,3vw,42px);font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1.2;}
+.slide-header .subtitle{margin-top:8px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--warm-gray);}
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:16px;max-width:760px;width:100%;}
+.bullet-list li{display:flex;align-items:flex-start;gap:14px;font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,18px);color:var(--ink);line-height:1.5;}
+.bullet-list li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:7px;}
+.slide-caveat{margin-top:32px;font-family:'Caveat',cursive;font-size:clamp(18px,2vw,26px);color:var(--amber);font-weight:600;text-align:center;}
+.slide-key{margin-top:28px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--ink);font-weight:600;text-align:center;font-style:italic;max-width:720px;}
+.content-table{width:100%;max-width:900px;border-collapse:collapse;font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,15px);}
+.content-table th{background:var(--ink);color:#fff;padding:10px 16px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+.content-table td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--ink);line-height:1.4;vertical-align:top;}
+.content-table tr:last-child td{border-bottom:none;}
+.content-table tr:nth-child(even) td{background:rgba(0,0,0,.02);}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;width:100%;}
+.col-box{padding:24px;border-radius:10px;border:1px solid var(--border);background:#fff;}
+.col-box .col-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;}
+.col-box h3{font-family:'Lora',Georgia,serif;font-size:clamp(14px,1.5vw,18px);font-weight:600;color:var(--ink);margin-bottom:8px;}
+.col-box p{font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--warm-gray);line-height:1.5;}
+.col-box em{display:block;margin-top:8px;font-style:italic;font-size:clamp(11px,1.1vw,13px);color:var(--warm-gray);}
+.artifact-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:28px 32px;max-width:840px;width:100%;box-shadow:0 1px 3px rgba(28,25,23,.08);}
+.artifact-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:14px;}
+.artifact-box p{font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,14px);color:var(--warm-gray);margin-bottom:14px;line-height:1.5;}
+.cta-box{background:var(--amber-light);border:1px solid #F6D860;border-radius:12px;padding:32px 40px;max-width:700px;width:100%;text-align:center;}
+.cta-box p{font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--ink);line-height:1.6;margin-bottom:20px;}
+.cta-btn{display:inline-block;background:var(--amber);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:12px 36px;border-radius:8px;text-decoration:none;}
+.back-link{position:fixed;top:16px;left:20px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--warm-gray);text-decoration:none;z-index:200;letter-spacing:.04em;}
+.back-link:hover{color:var(--amber);}
+#progress-bar-track{position:fixed;bottom:0;left:0;width:100%;height:3px;background:rgba(255,255,255,.08);z-index:200;}
+#progress-bar-fill{height:100%;background:var(--amber);transition:width 300ms ease;}
+#slide-counter{position:fixed;bottom:18px;right:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);z-index:200;letter-spacing:.04em;}
+#nav-hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:'DM Sans',sans-serif;font-size:12px;color:#57534E;z-index:200;pointer-events:none;opacity:1;transition:opacity 600ms ease;}
+#nav-hint.hidden{opacity:0;}
+</style>
+</head>
+<body>
+<a href="/" class="back-link">← All courses</a>
+<div id="deck">
+
+  <!-- 1 COVER -->
+  <div class="slide statement active" data-slide="1">
+    <p class="s-label">Free Lightning Lesson · 25 Minutes</p>
+    <p class="s-title">The Context Moat</p>
+    <p class="s-sub">Everyone's using the same models. The winner isn't who has the best AI. It's who has the best context.</p>
+    <p class="s-caveat">By Angshuman Rudra</p>
+  </div>
+
+  <!-- 2 OVERVIEW -->
+  <div class="slide content" data-slide="2">
+    <div class="slide-header"><h2>What We'll Cover</h2></div>
+    <table class="content-table" style="max-width:680px">
+      <thead><tr><th>Section</th><th>Time</th><th>Topic</th></tr></thead>
+      <tbody>
+        <tr><td>Intro</td><td>5 min</td><td>The Question Everyone Gets Wrong</td></tr>
+        <tr><td>Module 1</td><td>8 min</td><td>Why Context Is Now the Moat</td></tr>
+        <tr><td>Module 2</td><td>7 min</td><td>The Question That Reveals Your Moat</td></tr>
+        <tr><td>Module 3</td><td>5 min</td><td>Auditing and Building Your Context Moat</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3 INTRO DIVIDER -->
+  <div class="slide statement" data-slide="3">
+    <p class="s-label">Intro · 5 Minutes</p>
+    <p class="s-title">The Question Everyone Gets Wrong</p>
+  </div>
+
+  <!-- 4 THE WRONG QUESTION -->
+  <div class="slide statement" data-slide="4">
+    <p class="s-title">"Which model should we use?"</p>
+    <p class="s-sub">Teams spend weeks evaluating models. Months debating fine-tuning vs. RAG. And then a competitor ships a better product with the same model they rejected last quarter. The model is not the moat. It never was.</p>
+    <p class="s-caveat">If your competitive advantage lives in which model you chose, your competitor's next API call erases it.</p>
+  </div>
+
+  <!-- 5 MODULE 1 DIVIDER -->
+  <div class="slide statement" data-slide="5">
+    <p class="s-label">Module 1 · 8 Minutes</p>
+    <p class="s-title">Why Context Is Now the Moat</p>
+  </div>
+
+  <!-- 6 HOW THE MOAT MOVED -->
+  <div class="slide content" data-slide="6">
+    <div class="slide-header"><h2>How the Moat Moved</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Then (2022–2023)</th><th>Now (2025+)</th></tr></thead>
+      <tbody>
+        <tr><td>Model access was the moat</td><td>Every team has access to the same frontier models</td></tr>
+        <tr><td>GPT-4 was a competitive edge</td><td>Claude, GPT-4o, Gemini — all commodity APIs</td></tr>
+        <tr><td>Fine-tuning was exotic and expensive</td><td>Open-source fine-tuning is routine</td></tr>
+        <tr><td>Prompt engineering was a differentiator</td><td>Prompt patterns are public, shared, replicated</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-caveat">The model is now a utility — like electricity. Nobody wins because they have better electricity.</p>
+  </div>
+
+  <!-- 7 WHAT CONTEXT IS -->
+  <div class="slide content" data-slide="7">
+    <div class="slide-header"><h2>What "Context" Actually Means</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Type of context</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Documents</strong></td><td>Knowledge bases, product docs, SOPs, contracts</td></tr>
+        <tr><td><strong>Structured data</strong></td><td>Customer history, transaction records, usage logs</td></tr>
+        <tr><td><strong>Behavioral signals</strong></td><td>What the user has clicked, skipped, edited, flagged</td></tr>
+        <tr><td><strong>Temporal context</strong></td><td>What's changed recently, what's expired, what's pending</td></tr>
+        <tr><td><strong>Proprietary knowledge</strong></td><td>Research, methods, IP that only your company has</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">The model is the engine. Context is the fuel. The engine is the same for everyone. The fuel is where you win.</p>
+  </div>
+
+  <!-- 8 WHY CONTEXT COMPOUNDS -->
+  <div class="slide content" data-slide="8">
+    <div class="slide-header"><h2>Why Context Creates a Compounding Advantage</h2></div>
+    <ul class="bullet-list">
+      <li>Every interaction with your product produces new signal about the user, their patterns, their preferences</li>
+      <li>That signal feeds back into better context → better outputs → more user trust → more interactions</li>
+      <li>After 6 months of use, your product knows things about the user's workflow that a competitor starting fresh cannot replicate by switching models</li>
+      <li>The flywheel: <strong>use → signal → context → better output → more use</strong></li>
+    </ul>
+    <p class="slide-key">The longer a user stays, the worse a competitor's product looks by comparison — not because of the model, but because of accumulated context.</p>
+  </div>
+
+  <!-- 9 MODULE 2 DIVIDER -->
+  <div class="slide statement" data-slide="9">
+    <p class="s-label">Module 2 · 7 Minutes</p>
+    <p class="s-title">The Question That Reveals Your Moat</p>
+  </div>
+
+  <!-- 10 THE QUESTION -->
+  <div class="slide statement" data-slide="10">
+    <p class="s-title" style="font-style:italic">"If a competitor copied your model setup exactly — same model, same prompts, same architecture — would your product still be better?"</p>
+    <p class="s-sub" style="margin-top:32px"><strong style="color:#fff">Yes:</strong> You have a context moat. &nbsp;&nbsp; <strong style="color:#fff">No:</strong> You are on borrowed ground.</p>
+    <p class="s-caveat">For most AI products built in 2023–2024, the honest answer is No.</p>
+  </div>
+
+  <!-- 11 WHAT YES LOOKS LIKE -->
+  <div class="slide content" data-slide="11">
+    <div class="slide-header"><h2>What a Context Moat Actually Looks Like</h2></div>
+    <div class="three-col">
+      <div class="col-box">
+        <div class="col-label">Pattern 1</div>
+        <h3>Proprietary training signal</h3>
+        <p>Your product improves because of interactions only your users have.</p>
+        <em>A legal AI that gets smarter from how lawyers at your firm edit its outputs — not public data.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Pattern 2</div>
+        <h3>Embedded operational context</h3>
+        <p>Your system knows the user's SOPs, org structure, history, language.</p>
+        <em>A sales AI that knows every deal your company has run for 5 years, not just generic training.</em>
+      </div>
+      <div class="col-box">
+        <div class="col-label">Pattern 3</div>
+        <h3>Network-effect context</h3>
+        <p>Context gets better as more people use the product.</p>
+        <em>A support AI that learns from how your best agents resolve tickets — the more tickets, the better the routing.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12 WARNING SIGNS -->
+  <div class="slide content" data-slide="12">
+    <div class="slide-header"><h2>Warning Signs You're on Borrowed Ground</h2></div>
+    <ul class="bullet-list">
+      <li>Your "AI feature" is a wrapper around an API with a good prompt</li>
+      <li>If someone read your system prompt, they could replicate your product in an afternoon</li>
+      <li>Your product doesn't get better the longer a user stays</li>
+      <li>Your data strategy is "we'll use what the model already knows"</li>
+      <li>You haven't defined what your product will know that competitors won't</li>
+    </ul>
+    <p class="slide-key">None of these are fatal — if you catch them early. All of them are fatal if you ship a product on top of them and call it defensible.</p>
+  </div>
+
+  <!-- 13 MODULE 3 DIVIDER -->
+  <div class="slide statement" data-slide="13">
+    <p class="s-label">Module 3 · 5 Minutes</p>
+    <p class="s-title">Auditing and Building Your Context Moat</p>
+  </div>
+
+  <!-- 14 FOUR DIMENSIONS -->
+  <div class="slide content" data-slide="14">
+    <div class="slide-header"><h2>Four Dimensions of a Strong Context Moat</h2></div>
+    <table class="content-table">
+      <thead><tr><th>Dimension</th><th>The Question</th><th>Weak looks like</th><th>Strong looks like</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Freshness</strong></td><td>Is the context current?</td><td>Knowledge base updated 6 months ago</td><td>Synced in real time or daily pipeline</td></tr>
+        <tr><td><strong>Specificity</strong></td><td>Is the context specific to this user/org?</td><td>Generic knowledge anyone could use</td><td>Custom to this customer's data, history, language</td></tr>
+        <tr><td><strong>Proprietary</strong></td><td>Does anyone else have this?</td><td>Public web data, common documents</td><td>Internal data, behavioral signal, unique IP</td></tr>
+        <tr><td><strong>Compounding</strong></td><td>Does it grow with use?</td><td>Static knowledge base</td><td>Flywheel: use → signal → better context</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 15 ARTIFACT: CONTEXT MOAT AUDIT -->
+  <div class="slide content" data-slide="15">
+    <div class="slide-header"><h2>Artifact: Context Moat Audit</h2></div>
+    <div class="artifact-box">
+      <div class="artifact-label">Run this for your current AI product or feature</div>
+      <p><strong>Step 1:</strong> If a competitor copied your model setup exactly, would your product still be better?</p>
+      <table class="content-table">
+        <thead><tr><th>Dimension</th><th>Current state</th><th>Gap</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Freshness</strong></td><td></td><td></td><td></td></tr>
+          <tr><td><strong>Specificity</strong></td><td></td><td></td><td></td></tr>
+          <tr><td><strong>Proprietary</strong></td><td></td><td></td><td></td></tr>
+          <tr><td><strong>Compounding</strong></td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px"><strong>Step 2:</strong> Identify your strongest dimension — double down here.<br/><strong>Step 3:</strong> Identify your weakest — this is your biggest competitive vulnerability.<br/><strong>Step 4:</strong> What would it take to go from weak to strong in 90 days?</p>
+    </div>
+  </div>
+
+  <!-- 16 THREE THINGS THIS WEEK -->
+  <div class="slide content" data-slide="16">
+    <div class="slide-header"><h2>Three Things You Can Do This Week</h2></div>
+    <ul class="bullet-list">
+      <li><strong>Run the Context Moat question in your next roadmap review</strong> — ask it out loud, with your team. Watch how they answer.</li>
+      <li><strong>Complete the Context Moat Audit for your current product</strong> — fill in all four dimensions. The row where you can't write anything in "Proprietary" is the gap to fix.</li>
+      <li><strong>Define one data asset you could build that competitors can't easily replicate</strong> — it doesn't have to be large. It has to be yours.</li>
+    </ul>
+    <p class="slide-caveat">Every team is using the same models. The ones that win are building context the competition can't copy.</p>
+  </div>
+
+  <!-- 17 SUBSCRIBE CTA -->
+  <div class="slide content" data-slide="17">
+    <div class="slide-header"><h2>Get the Full Audit + Go Deeper</h2></div>
+    <div class="cta-box">
+      <p>Get the Context Moat Audit worksheet (formatted, with examples from three product types) plus early access to the full 75-minute AI Systems Thinking course as it launches.</p>
+      <a class="cta-btn" href="https://substack.com/@angshuman" target="_blank">Subscribe — it's free →</a>
+    </div>
+    <p style="margin-top:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);text-align:center">Questions? <a href="mailto:angshuman.rudra@gmail.com" style="color:var(--amber)">angshuman.rudra@gmail.com</a></p>
+  </div>
+
+</div>
+
+<div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+<div id="slide-counter">1 / 17</div>
+<div id="nav-hint">← → Space to navigate</div>
+
+<script>
+const TOTAL = 17; let current = 1;
+const counter = document.getElementById('slide-counter');
+const fill = document.getElementById('progress-bar-fill');
+const navHint = document.getElementById('nav-hint');
+function getSlide(n){return document.querySelector(`.slide[data-slide="${n}"]`);}
+function updateUI(){counter.textContent=`${current} / ${TOTAL}`;fill.style.width=`${(current/TOTAL)*100}%`;}
+function goTo(n){if(n<1||n>TOTAL)return;const prev=getSlide(current),next=getSlide(n);if(prev)prev.classList.remove('active');current=n;if(next)next.classList.add('active');updateUI();}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();goTo(current+1);}else if(e.key==='ArrowLeft'){e.preventDefault();goTo(current-1);}});
+let hintTimer=setTimeout(()=>navHint.classList.add('hidden'),4000);
+document.addEventListener('keydown',()=>{navHint.classList.remove('hidden');clearTimeout(hintTimer);hintTimer=setTimeout(()=>navHint.classList.add('hidden'),2500);});
+updateUI();
+</script>
+</body>
+</html>
