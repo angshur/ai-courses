@@ -45,90 +45,93 @@ const COURSES = [
 
 export default function Home() {
   return (
-    <main>
+    <main style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
 
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F0EBE0]/95 backdrop-blur-sm border-b border-[#E8E2D5]">
-        <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
-          <a
-            href="https://angshumanrudra.com"
-            className="font-mono text-[9px] tracking-widest uppercase text-[#9A9490] hover:text-[#B8933A] transition-colors"
-          >
-            Angshuman Rudra
-          </a>
-          <a
-            href="https://substack.com/@angshuman"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-[9px] tracking-widest uppercase text-[#F0EBE0] bg-[#1A1714] px-4 py-2 hover:bg-[#B8933A] transition-colors"
-          >
-            Subscribe
-          </a>
-        </div>
+      <nav style={{ background: "var(--ink)", padding: "0 40px", height: "48px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <a
+          href="https://angshumanrudra.com"
+          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--warm-gray)", textDecoration: "none" }}
+        >
+          Angshuman Rudra
+        </a>
+        <a
+          href="https://substack.com/@angshuman"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--amber)", textDecoration: "none" }}
+        >
+          Subscribe →
+        </a>
       </nav>
 
       {/* Hero */}
-      <section className="pt-24 pb-10 px-6 bg-[#F0EBE0]">
-        <div className="max-w-6xl mx-auto">
-          <p className="font-mono text-[9px] tracking-widest uppercase text-[#B8933A] mb-4">
-            Angshuman Rudra · How I teach
-          </p>
-          <h1
-            className="text-[clamp(36px,4vw,56px)] leading-tight text-[#1A1714]"
-            style={{ fontFamily: "var(--font-cormorant)", fontWeight: 300 }}
-          >
-            Teaching.
-          </h1>
-          <p
-            className="mt-4 text-[#4A4540] max-w-2xl leading-relaxed"
-            style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1rem" }}
-          >
-            Free courses on AI for product managers, career professionals, and builders.
-            Practical frameworks, not hype. One complete curriculum exists — three more are in progress.
-          </p>
-        </div>
+      <section style={{ background: "var(--ink)", padding: "72px 40px 80px", textAlign: "center" }}>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--warm-gray)", marginBottom: "28px" }}>
+          By Angshuman Rudra
+        </p>
+        <h1 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "clamp(36px, 5vw, 64px)", fontWeight: 600, color: "#FFFFFF", lineHeight: 1.2, letterSpacing: "-0.02em", maxWidth: "800px", margin: "0 auto 24px" }}>
+          Teaching AI to the people who need it most.
+        </h1>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "clamp(15px, 1.6vw, 19px)", color: "var(--warm-gray)", fontWeight: 400, maxWidth: "600px", margin: "0 auto 32px", lineHeight: 1.6 }}>
+          Free courses for product managers, career professionals, and builders. Practical frameworks, not hype.
+        </p>
+        <p style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(20px, 2.2vw, 28px)", color: "var(--amber)", fontWeight: 600 }}>
+          One curriculum live. Three more in progress.
+        </p>
       </section>
 
-      {/* Course list */}
-      <section className="bg-[#F0EBE0] px-6 pb-24">
-        <div className="max-w-6xl mx-auto">
-          <div className="divide-y divide-[#E8E2D5] border-t border-[#E8E2D5]">
+      {/* Course cards */}
+      <section style={{ background: "var(--cream)", padding: "72px 40px" }}>
+        <div style={{ maxWidth: "960px", margin: "0 auto" }}>
+
+          {/* Section label */}
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--warm-gray)", marginBottom: "40px" }}>
+            The Courses
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             {COURSES.map((course) => (
               <a
                 key={course.num}
                 href={course.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex gap-8 py-6 group hover:bg-[#E8E2D5] transition-colors -mx-6 px-6"
+                style={{ display: "flex", alignItems: "flex-start", gap: "28px", background: "#FFFFFF", border: "1px solid var(--border)", borderRadius: "12px", padding: "28px 32px", boxShadow: "0 1px 3px rgba(28,25,23,0.08)", textDecoration: "none", transition: "box-shadow 200ms ease, transform 150ms ease" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 4px 12px rgba(28,25,23,0.12)"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-1px)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 1px 3px rgba(28,25,23,0.08)"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; }}
               >
-                <div className="shrink-0 w-10 pt-1">
-                  <span className="font-mono text-[9px] tracking-widest text-[#9A9490]">{course.num}</span>
-                </div>
-                <div className="flex-1 min-w-0 flex flex-col gap-2">
-                  <div className="flex items-center gap-3">
-                    <p className="font-mono text-[9px] tracking-widest uppercase text-[#B8933A]">{course.format}</p>
+                {/* Number */}
+                <span style={{ fontFamily: "'Caveat', cursive", fontSize: "28px", color: "var(--amber)", fontWeight: 700, lineHeight: 1, flexShrink: 0, marginTop: "2px" }}>
+                  {course.num}
+                </span>
+
+                {/* Content */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px", flexWrap: "wrap" }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--warm-gray)" }}>
+                      {course.format}
+                    </span>
                     {course.live && (
-                      <span className="font-mono text-[8px] tracking-widest uppercase text-[#B8933A] border border-[#B8933A]/40 px-1.5 py-0.5">
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", background: "var(--amber-light)", color: "var(--amber)", padding: "2px 8px", borderRadius: "4px" }}>
                         Live
                       </span>
                     )}
                   </div>
-                  <h2
-                    className="leading-snug text-[#1A1714] group-hover:text-[#B8933A] transition-colors"
-                    style={{ fontFamily: "var(--font-cormorant)", fontWeight: 400, fontSize: "clamp(18px, 1.6vw, 26px)" }}
-                  >
+                  <h2 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "clamp(16px, 1.6vw, 21px)", fontWeight: 600, color: "var(--ink)", marginBottom: "10px", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
                     {course.title}
                   </h2>
-                  <p
-                    className="text-[#4A4540] leading-relaxed max-w-2xl"
-                    style={{ fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "0.95rem" }}
-                  >
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "clamp(13px, 1.25vw, 15px)", color: "var(--warm-gray)", lineHeight: 1.6, marginBottom: "14px" }}>
                     {course.tagline}
                   </p>
-                  <p className="font-mono text-[9px] tracking-widest uppercase text-[#9A9490]">{course.audience}</p>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#A8A29E" }}>
+                    {course.audience}
+                  </p>
                 </div>
-                <div className="hidden md:flex items-center shrink-0 self-center">
-                  <span className="font-mono text-[9px] tracking-widest uppercase text-[#B8933A] group-hover:text-[#1A1714] transition-colors whitespace-nowrap">
+
+                {/* CTA */}
+                <div style={{ flexShrink: 0, alignSelf: "center" }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", fontWeight: 600, color: "var(--amber)", whiteSpace: "nowrap" }}>
                     {course.cta}
                   </span>
                 </div>
@@ -138,22 +141,40 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA strip */}
+      <section style={{ background: "var(--amber-light)", borderTop: "1px solid #F6D860", padding: "48px 40px", textAlign: "center" }}>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--amber)", marginBottom: "16px" }}>
+          Stay ahead
+        </p>
+        <h2 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: "clamp(22px, 2.8vw, 34px)", fontWeight: 600, color: "var(--ink)", marginBottom: "24px", letterSpacing: "-0.02em" }}>
+          Get notified when new courses launch.
+        </h2>
+        <a
+          href="https://substack.com/@angshuman"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ display: "inline-block", background: "var(--amber)", color: "#FFFFFF", fontFamily: "'DM Sans', sans-serif", fontSize: "15px", fontWeight: 600, padding: "14px 40px", borderRadius: "8px", textDecoration: "none", letterSpacing: "-0.01em" }}
+        >
+          Subscribe — it&apos;s free →
+        </a>
+      </section>
+
       {/* Footer */}
-      <footer className="py-6 px-6 bg-[#0F0D0B] border-t border-[#1A1714]">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="font-mono text-[8px] tracking-widest uppercase text-[#4A4540]">Angshuman Rudra · MMXXVI</span>
-          <div className="flex items-center gap-6">
-            {[
-              ["angshumanrudra.com", "https://angshumanrudra.com"],
-              ["LinkedIn", "https://linkedin.com/in/angshuman"],
-              ["Substack", "https://substack.com/@angshuman"],
-            ].map(([label, href]) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                className="font-mono text-[8px] tracking-widest uppercase text-[#4A4540] hover:text-[#B8933A] transition-colors">
-                {label}
-              </a>
-            ))}
-          </div>
+      <footer style={{ background: "var(--ink)", padding: "20px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#57534E", letterSpacing: "0.04em" }}>
+          Angshuman Rudra · MMXXVI
+        </span>
+        <div style={{ display: "flex", gap: "24px" }}>
+          {[
+            ["angshumanrudra.com", "https://angshumanrudra.com"],
+            ["LinkedIn", "https://linkedin.com/in/angshuman"],
+            ["Substack", "https://substack.com/@angshuman"],
+          ].map(([label, href]) => (
+            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#57534E", textDecoration: "none", letterSpacing: "0.04em" }}>
+              {label}
+            </a>
+          ))}
         </div>
       </footer>
 
