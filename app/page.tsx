@@ -12,6 +12,16 @@ const COURSES = [
     cta: "Register on Maven →",
   },
   {
+    num: "05",
+    format: "FREE · 15 MIN",
+    title: "Directing Dozens: How to Run a Coding Agent Fleet",
+    tagline: "Stop running one agent at a time. Here's the operating model for 10–20 agents working in parallel.",
+    audience: "Developers and technical PMs at Stage 5–7",
+    live: true,
+    url: "/course-directing-dozens.html",
+    cta: "View slides →",
+  },
+  {
     num: "02",
     format: "FREE · 75 MIN",
     title: "AI Won't Take Your Job. Here's What Will.",
@@ -77,7 +87,7 @@ export default function Home() {
           Free courses for product managers, career professionals, and builders. Practical frameworks, not hype.
         </p>
         <p style={{ fontFamily: "'Caveat', cursive", fontSize: "clamp(20px, 2.2vw, 28px)", color: "var(--amber)", fontWeight: 600 }}>
-          Four courses. All free. All live.
+          Five courses. All free. All live.
         </p>
       </section>
 

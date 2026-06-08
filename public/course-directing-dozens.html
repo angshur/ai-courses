@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Directing Dozens: How to Run a Coding Agent Fleet — Angshuman Rudra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Caveat:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root { --cream:#FAF7F2; --ink:#1C1917; --amber:#D97706; --amber-light:#FEF3C7; --warm-gray:#78716C; --border:#E7E0D5; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;background:var(--ink);}
+#deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+.slide{position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 80px 80px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity 300ms ease,transform 300ms ease;}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:all;}
+
+/* STATEMENT slides — dark ink background */
+.slide.statement{background:var(--ink);text-align:center;}
+.slide.statement .s-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:20px;}
+.slide.statement .s-title{font-family:'Lora',Georgia,serif;font-size:clamp(32px,4.5vw,58px);font-weight:600;color:#fff;line-height:1.2;letter-spacing:-.02em;max-width:880px;}
+.slide.statement .s-sub{margin-top:24px;font-family:'DM Sans',sans-serif;font-size:clamp(15px,1.6vw,20px);color:var(--warm-gray);max-width:700px;line-height:1.6;}
+.slide.statement .s-caveat{margin-top:32px;font-family:'Caveat',cursive;font-size:clamp(20px,2.2vw,30px);color:var(--amber);font-weight:600;}
+.slide.statement .s-key{margin-top:32px;font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.4vw,18px);color:var(--warm-gray);font-style:italic;max-width:720px;line-height:1.6;}
+
+/* CONTENT slides — cream background */
+.slide.content{background:var(--cream);}
+.slide-header{text-align:center;margin-bottom:32px;}
+.slide-header .s-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:10px;}
+.slide-header h2{font-family:'Lora',Georgia,serif;font-size:clamp(24px,3vw,42px);font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1.2;}
+.slide-header .subtitle{margin-top:8px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--warm-gray);line-height:1.5;}
+
+/* Bullet lists */
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:16px;max-width:760px;width:100%;}
+.bullet-list li{display:flex;align-items:flex-start;gap:14px;font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,18px);color:var(--ink);line-height:1.5;}
+.bullet-list li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:7px;}
+
+/* Fix/callout box */
+.fix-box{background:#fff;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:18px 24px;max-width:760px;width:100%;margin-top:28px;}
+.fix-box .fix-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.fix-box p{font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.35vw,16px);color:var(--ink);line-height:1.6;}
+
+/* Key line */
+.slide-key{margin-top:24px;font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.3vw,16px);color:var(--ink);font-weight:600;text-align:center;font-style:italic;max-width:720px;}
+.slide-caveat{margin-top:28px;font-family:'Caveat',cursive;font-size:clamp(18px,2vw,26px);color:var(--amber);font-weight:600;text-align:center;}
+
+/* Tables */
+.content-table{width:100%;max-width:880px;border-collapse:collapse;font-family:'DM Sans',sans-serif;font-size:clamp(12px,1.2vw,15px);}
+.content-table th{background:var(--ink);color:#fff;padding:10px 16px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;}
+.content-table td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--ink);line-height:1.5;vertical-align:top;}
+.content-table tr:last-child td{border-bottom:none;}
+.content-table tr:nth-child(even) td{background:rgba(0,0,0,.02);}
+.content-table .num{font-family:'Caveat',cursive;font-size:18px;font-weight:700;color:var(--amber);white-space:nowrap;}
+
+/* Four roles grid */
+.four-col{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:900px;width:100%;}
+.role-box{padding:20px 22px;border-radius:10px;border:1px solid var(--border);background:#fff;}
+.role-box .role-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.role-box h3{font-family:'Lora',Georgia,serif;font-size:clamp(14px,1.5vw,18px);font-weight:600;color:var(--ink);margin-bottom:6px;}
+.role-box p{font-family:'DM Sans',sans-serif;font-size:clamp(11px,1.15vw,13px);color:var(--warm-gray);line-height:1.5;}
+
+/* CTA box */
+.cta-box{background:var(--amber-light);border:1px solid #F6D860;border-radius:12px;padding:36px 44px;max-width:680px;width:100%;text-align:center;}
+.cta-box p{font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.4vw,17px);color:var(--ink);line-height:1.7;margin-bottom:24px;}
+.cta-btn{display:inline-block;background:var(--amber);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:13px 38px;border-radius:8px;text-decoration:none;letter-spacing:-.01em;}
+
+/* Nav / progress */
+.back-link{position:fixed;top:16px;left:20px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--warm-gray);text-decoration:none;z-index:200;letter-spacing:.04em;}
+.back-link:hover{color:var(--amber);}
+#progress-bar-track{position:fixed;bottom:0;left:0;width:100%;height:3px;background:rgba(255,255,255,.08);z-index:200;}
+#progress-bar-fill{height:100%;background:var(--amber);transition:width 300ms ease;}
+#slide-counter{position:fixed;bottom:18px;right:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);z-index:200;letter-spacing:.04em;}
+#nav-hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:'DM Sans',sans-serif;font-size:12px;color:#57534E;z-index:200;pointer-events:none;opacity:1;transition:opacity 600ms ease;}
+#nav-hint.hidden{opacity:0;}
+</style>
+</head>
+<body>
+<a href="/" class="back-link">← All courses</a>
+<div id="deck">
+
+  <!-- 1 COVER -->
+  <div class="slide statement active" data-slide="1">
+    <p class="s-label">Free Mini Course · 15 Minutes</p>
+    <p class="s-title">Directing Dozens: How to Run a Coding Agent Fleet</p>
+    <p class="s-sub">Stop running one agent at a time.</p>
+    <p class="s-caveat">By Angshuman Rudra</p>
+  </div>
+
+  <!-- 2 OVERVIEW -->
+  <div class="slide content" data-slide="2">
+    <div class="slide-header"><h2>What We'll Cover</h2></div>
+    <table class="content-table" style="max-width:680px">
+      <thead><tr><th>Section</th><th>Time</th><th>Topic</th></tr></thead>
+      <tbody>
+        <tr><td>Intro</td><td>3 min</td><td>The Ceiling — where most people get stuck</td></tr>
+        <tr><td>Module 1</td><td>2 min</td><td>The Mindset Shift</td></tr>
+        <tr><td>Module 2</td><td>5 min</td><td>The Four Problems You Have to Solve</td></tr>
+        <tr><td>Module 3</td><td>3 min</td><td>The Four Things You Need</td></tr>
+        <tr><td>Close</td><td>2 min</td><td>What to Do This Week</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3 THE 5 STAGES -->
+  <div class="slide content" data-slide="3">
+    <div class="slide-header">
+      <p class="s-label">Intro — Where Are You?</p>
+      <h2>The 5 Stages of Coding Agent Use</h2>
+    </div>
+    <table class="content-table" style="max-width:800px">
+      <thead><tr><th style="width:60px">Stage</th><th>What it looks like</th></tr></thead>
+      <tbody>
+        <tr><td><span class="num">1</span></td><td>One agent, permission mode, reading every diff</td></tr>
+        <tr><td><span class="num">2</span></td><td>YOLO mode. You've stopped reading every diff.</td></tr>
+        <tr><td><span class="num">3</span></td><td>3–5 parallel agents. You're fast.</td></tr>
+        <tr><td><span class="num" style="color:#D97706;font-weight:700">4</span></td><td><strong>10+ agents. You're the bottleneck.</strong></td></tr>
+        <tr><td><span class="num">5</span></td><td>Agents run while you sleep.</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-key">Most people hit Stage 4 and think they need better agents. They don't. They need a different operating model.</p>
+  </div>
+
+  <!-- 4 WHAT BREAKS AT STAGE 4 -->
+  <div class="slide statement" data-slide="4">
+    <p class="s-label">Intro — The Ceiling</p>
+    <p class="s-title">Three Things That Break When You Hit 10+ Agents</p>
+    <div style="margin-top:36px;text-align:left;max-width:720px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;align-items:flex-start;gap:16px">
+        <span style="font-family:'Caveat',cursive;font-size:22px;color:var(--amber);font-weight:700;flex-shrink:0;margin-top:2px">01</span>
+        <p style="font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,18px);color:#fff;line-height:1.5">You're manually moving work between agents — you've become the middleware</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:16px">
+        <span style="font-family:'Caveat',cursive;font-size:22px;color:var(--amber);font-weight:700;flex-shrink:0;margin-top:2px">02</span>
+        <p style="font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,18px);color:#fff;line-height:1.5">Agents run out of context, stop, and wait for you to come back</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:16px">
+        <span style="font-family:'Caveat',cursive;font-size:22px;color:var(--amber);font-weight:700;flex-shrink:0;margin-top:2px">03</span>
+        <p style="font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,18px);color:#fff;line-height:1.5">Parallel agents produce conflicting changes that create a merge nightmare</p>
+      </div>
+    </div>
+    <p class="s-key">The bottleneck isn't the model. It's you in the middle.</p>
+  </div>
+
+  <!-- 5 YOU'RE THE PM NOW -->
+  <div class="slide content" data-slide="5">
+    <div class="slide-header">
+      <p class="s-label">Module 1 — The Mindset Shift</p>
+      <h2>You're the PM Now</h2>
+    </div>
+    <ul class="bullet-list">
+      <li>Design the work</li>
+      <li>Break it into tasks agents can execute</li>
+      <li>Review what lands</li>
+      <li>Keep the machine fed</li>
+    </ul>
+    <p class="slide-key">The agents are your engineering team. Your job is to make tasks for them. That's it.</p>
+  </div>
+
+  <!-- 6 THROUGHPUT OVER PRECISION -->
+  <div class="slide statement" data-slide="6">
+    <p class="s-label">Module 1 — The Mindset Shift</p>
+    <p class="s-title">Throughput Over Precision</p>
+    <div style="margin-top:32px;text-align:left;max-width:680px;display:flex;flex-direction:column;gap:14px">
+      <p style="font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,18px);color:var(--warm-gray);line-height:1.6">Running 20 agents in parallel means accepting that some work gets done twice, some tasks need a retry, and some output gets edited before it merges.</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:clamp(14px,1.5vw,18px);color:#fff;line-height:1.6">That's not failure. That's the tradeoff for going 10x faster.</p>
+    </div>
+    <p class="s-caveat">Creation and correction at the speed of thought.</p>
+  </div>
+
+  <!-- 7 PROBLEM 1: AGENTS FORGET -->
+  <div class="slide content" data-slide="7">
+    <div class="slide-header">
+      <p class="s-label">Module 2 — Problem 1 of 4</p>
+      <h2>Agents Forget Everything</h2>
+    </div>
+    <ul class="bullet-list" style="max-width:720px">
+      <li>The context window fills up and the session ends</li>
+      <li>Everything the agent "knew" — the plan, the decisions, the current state — is gone</li>
+      <li>If your work only lives inside a session, it disappears when the session does</li>
+    </ul>
+    <div class="fix-box">
+      <div class="fix-label">The Fix</div>
+      <p><strong>Work must live outside the session</strong> — in git, in a file, in a task system. The session is ephemeral. The work is not. When a new session starts, the agent reads its assigned task and picks up immediately.</p>
+    </div>
+  </div>
+
+  <!-- 8 PROBLEM 2: AGENTS WAIT -->
+  <div class="slide content" data-slide="8">
+    <div class="slide-header">
+      <p class="s-label">Module 2 — Problem 2 of 4</p>
+      <h2>Agents Wait Instead of Work</h2>
+    </div>
+    <ul class="bullet-list" style="max-width:720px">
+      <li>Agents are trained to be polite — they start a session and wait for you to type something</li>
+      <li>At scale with 20 agents, you cannot babysit each one</li>
+      <li>An agent sitting idle is burning time and blocking the queue behind it</li>
+    </ul>
+    <div class="fix-box">
+      <div class="fix-label">The Fix</div>
+      <p>Every agent needs one rule: <strong>"If there is work assigned to me, I run it immediately. No waiting."</strong> Agents that check their assigned task on startup and begin working without prompting are the ones that actually scale.</p>
+    </div>
+  </div>
+
+  <!-- 9 PROBLEM 3: MERGE CHAOS -->
+  <div class="slide content" data-slide="9">
+    <div class="slide-header">
+      <p class="s-label">Module 2 — Problem 3 of 4</p>
+      <h2>Parallel Agents Create Merge Chaos</h2>
+    </div>
+    <ul class="bullet-list" style="max-width:720px">
+      <li>10 agents working the same codebase simultaneously means 10 branches diverging in parallel</li>
+      <li>The last agents to finish are merging against a codebase they've never seen</li>
+      <li>Their changes may not apply cleanly — or may contradict work that already landed</li>
+    </ul>
+    <div class="fix-box">
+      <div class="fix-label">The Fix</div>
+      <p>A <strong>dedicated merge handler</strong> — one agent whose only job is to serialize and intelligently merge completed work. It rejects conflicts, reorders when needed, and never lets broken code into main.</p>
+    </div>
+  </div>
+
+  <!-- 10 PROBLEM 4: NO VISIBILITY -->
+  <div class="slide content" data-slide="10">
+    <div class="slide-header">
+      <p class="s-label">Module 2 — Problem 4 of 4</p>
+      <h2>No Visibility</h2>
+    </div>
+    <ul class="bullet-list" style="max-width:720px">
+      <li>With 10+ agents running, you have no idea what's done, what's stuck, and what needs you</li>
+      <li>You're scanning raw output from every session trying to find the signal</li>
+      <li>The activity stream is noise</li>
+    </ul>
+    <div class="fix-box">
+      <div class="fix-label">The Fix</div>
+      <p>A <strong>work-order system</strong>. Every task has a status. Every batch of related tasks rolls up into a named unit you can track. You look at the summary — done, in progress, blocked — not the stream.</p>
+    </div>
+  </div>
+
+  <!-- 11 PERSISTENT WORK STATE -->
+  <div class="slide content" data-slide="11">
+    <div class="slide-header">
+      <p class="s-label">Module 3 — What You Need · 1 of 3</p>
+      <h2>Persistent Work State</h2>
+    </div>
+    <ul class="bullet-list" style="max-width:720px">
+      <li>Every task stored outside agent memory — in git, in a file, in a lightweight tracker</li>
+      <li>Each item has: what to do, who's doing it, what "done" looks like</li>
+      <li>When a session ends and a new one starts, the agent reads its task and picks up — no re-explaining, no catching up</li>
+      <li>Work that persists through crashes and restarts is work that actually gets done</li>
+    </ul>
+    <p class="slide-key">Sessions come and go. Work stays.</p>
+  </div>
+
+  <!-- 12 ROLE SEPARATION -->
+  <div class="slide content" data-slide="12">
+    <div class="slide-header">
+      <p class="s-label">Module 3 — What You Need · 2 of 3</p>
+      <h2>Role Separation</h2>
+      <p class="subtitle">Every scaling agent system converges on these four roles</p>
+    </div>
+    <div class="four-col">
+      <div class="role-box">
+        <div class="role-label">Role 1</div>
+        <h3>Orchestrator</h3>
+        <p>The one you talk to. Breaks down goals into tasks and assigns them to workers.</p>
+      </div>
+      <div class="role-box">
+        <div class="role-label">Role 2</div>
+        <h3>Workers</h3>
+        <p>Ephemeral. Execute one task, submit the result, go idle. Sessions are cattle.</p>
+      </div>
+      <div class="role-box">
+        <div class="role-label">Role 3</div>
+        <h3>Supervisor</h3>
+        <p>Monitors workers. Detects stuck ones. Escalates to you when needed.</p>
+      </div>
+      <div class="role-box">
+        <div class="role-label">Role 4</div>
+        <h3>Merge Handler</h3>
+        <p>Serializes completed work into main. Handles conflicts. One job only.</p>
+      </div>
+    </div>
+    <p class="slide-key">Without these roles, you're doing all four manually. That's why you're the bottleneck.</p>
+  </div>
+
+  <!-- 13 THE PROPULSION RULE -->
+  <div class="slide statement" data-slide="13">
+    <p class="s-label">Module 3 — What You Need · 3 of 3</p>
+    <p class="s-title">The Propulsion Rule</p>
+    <div style="margin-top:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:28px 36px;max-width:760px">
+      <p style="font-family:'Lora',Georgia,serif;font-size:clamp(18px,2.2vw,28px);color:#fff;font-style:italic;line-height:1.4;text-align:center">"If there is work assigned to you, run it. Now. Not after asking. Not after waiting. Now."</p>
+    </div>
+    <p class="s-sub" style="margin-top:28px">Agents that wait for human input kill the system at scale. Agents that check their queue on startup and start working are what make 20-agent fleets possible.</p>
+  </div>
+
+  <!-- 14 YOUR JOB AT SCALE -->
+  <div class="slide content" data-slide="14">
+    <div class="slide-header">
+      <p class="s-label">Close — What Changes</p>
+      <h2>Your Job at Scale</h2>
+    </div>
+    <table class="content-table" style="max-width:780px">
+      <thead><tr><th>Before (running 1–3 agents)</th><th>After (directing 10–20)</th></tr></thead>
+      <tbody>
+        <tr><td>Writing and reviewing code</td><td>Designing and decomposing work</td></tr>
+        <tr><td>Reading every diff</td><td>Reading the work-order summary</td></tr>
+        <tr><td>Manually moving output forward</td><td>Unblocking escalations</td></tr>
+        <tr><td>Keeping agents on track</td><td>Keeping the task queue full</td></tr>
+      </tbody>
+    </table>
+    <p class="slide-caveat">You're not debugging. You're directing.</p>
+  </div>
+
+  <!-- 15 THREE THINGS TO TRY -->
+  <div class="slide content" data-slide="15">
+    <div class="slide-header">
+      <p class="s-label">Close — This Week</p>
+      <h2>Three Things to Try This Week</h2>
+    </div>
+    <ul class="bullet-list" style="max-width:760px">
+      <li><strong>Set up a persistent task file</strong> for your current project — tasks with clear done criteria, stored in the repo. Not in your head, not in context.</li>
+      <li><strong>Add one rule to your agent prompt:</strong> "Check your assigned task first. If you have one, start it immediately without waiting for input."</li>
+      <li><strong>Designate one agent session as merge-only</strong> for a 2-hour block. Give it one job: serialize completed branches into main. See what changes.</li>
+    </ul>
+    <p class="slide-key">You don't need a platform to start. You need a practice.</p>
+  </div>
+
+  <!-- 16 CTA -->
+  <div class="slide content" data-slide="16">
+    <div class="slide-header"><h2>Go Deeper</h2></div>
+    <div class="cta-box">
+      <p>Subscribe for the full walkthrough — a hands-on session building your first agent fleet from scratch, including role setup, task design, and the merge handler pattern.</p>
+      <a class="cta-btn" href="https://substack.com/@angshuman" target="_blank">Subscribe — it's free →</a>
+    </div>
+    <p style="margin-top:24px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--warm-gray);text-align:center">Questions? <a href="mailto:angshuman.rudra@gmail.com" style="color:var(--amber)">angshuman.rudra@gmail.com</a></p>
+  </div>
+
+</div>
+
+<div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+<div id="slide-counter">1 / 16</div>
+<div id="nav-hint">← → Space to navigate</div>
+
+<script>
+const TOTAL = 16; let current = 1;
+const counter = document.getElementById('slide-counter');
+const fill = document.getElementById('progress-bar-fill');
+const navHint = document.getElementById('nav-hint');
+function getSlide(n){return document.querySelector(`.slide[data-slide="${n}"]`);}
+function updateUI(){counter.textContent=`${current} / ${TOTAL}`;fill.style.width=`${(current/TOTAL)*100}%`;}
+function goTo(n){if(n<1||n>TOTAL)return;const prev=getSlide(current),next=getSlide(n);if(prev)prev.classList.remove('active');current=n;if(next)next.classList.add('active');updateUI();}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();goTo(current+1);}else if(e.key==='ArrowLeft'){e.preventDefault();goTo(current-1);}});
+let hintTimer=setTimeout(()=>navHint.classList.add('hidden'),4000);
+document.addEventListener('keydown',()=>{navHint.classList.remove('hidden');clearTimeout(hintTimer);hintTimer=setTimeout(()=>navHint.classList.add('hidden'),2500);});
+updateUI();
+</script>
+</body>
+</html>
